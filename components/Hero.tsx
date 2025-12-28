@@ -1,11 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 
-/**
- * CHỖ THAY ẢNH SLIDE Ở ĐÂY NÈ:
- * - url: Dán link ảnh của bạn vào (nên dùng link từ Unsplash, Pinterest hoặc link ảnh đã upload)
- * - title: Tên hiện trên nhãn nhỏ của ảnh
- */
 const SLIDE_IMAGES = [
   {
     url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800",
@@ -35,7 +30,6 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Hàm cuộn mượt mà đến section
   const scrollToSection = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -45,107 +39,80 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-hudesign flex items-center pt-20 overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-1/4 -right-20 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-700"></div>
+    <div className="relative min-h-[90vh] md:min-h-screen bg-gradient-hudesign flex items-center pt-16 md:pt-20 overflow-hidden">
+      <div className="absolute top-1/4 -right-20 w-64 h-64 md:w-96 md:h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+      <div className="absolute bottom-1/4 -left-20 w-64 h-64 md:w-96 md:h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse delay-700"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center relative z-10">
-        <div className="space-y-8 text-center md:text-left">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-            <span className="text-indigo-400 font-bold text-xs uppercase tracking-widest">Học thiết kế cơ bản</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
+        <div className="space-y-6 md:space-y-8 text-center md:text-left">
+          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+            <span className="text-indigo-400 font-bold text-[10px] uppercase tracking-widest">Đào tạo 1 kèm 1 thực chiến</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight">
-            Khóa học thiết kế đồ họa cơ bản cho <span className="text-indigo-400">người làm marketing</span>
+          <h1 className="text-3xl md:text-6xl font-black text-white leading-[1.2] md:leading-tight">
+            Thiết kế đồ họa cơ bản cho <span className="text-indigo-400">Marketers</span>
           </h1>
           
-          <p className="text-lg text-slate-300 max-w-xl mx-auto md:mx-0">
-            Trang bị kỹ năng thiết kế thực tế để bùng nổ doanh số. Tự tay tạo ra các ấn phẩm quảng cáo "triệu view" với Photoshop, Illustrator và Canva.
+          <p className="text-sm md:text-lg text-slate-300 max-w-md mx-auto md:mx-0 leading-relaxed">
+            Làm chủ Photoshop, Illustrator và Canva để tự tay tạo ra các ấn phẩm quảng cáo thu hút khách hàng.
           </p>
 
-          <div className="flex flex-wrap justify-center md:justify-start gap-6">
-            <div className="flex flex-col items-center group">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/50 transition-all">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" alt="PS" className="w-10 h-10" />
+          <div className="flex justify-center md:justify-start gap-4 md:gap-6">
+            {['https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg', 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg', 'https://www.vectorlogo.zone/logos/canva/canva-icon.svg'].map((src, i) => (
+              <div key={i} className="w-10 h-10 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
+                <img src={src} alt="tool" className="w-6 h-6 md:w-9 md:h-9" />
               </div>
-              <span className="text-white text-xs mt-2 font-bold opacity-60">Photoshop</span>
-            </div>
-            <div className="flex flex-col items-center group">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-orange-500/20 group-hover:border-orange-500/50 transition-all">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg" alt="AI" className="w-10 h-10" />
-              </div>
-              <span className="text-white text-xs mt-2 font-bold opacity-60">Illustrator</span>
-            </div>
-            <div className="flex flex-col items-center group">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-cyan-500/20 group-hover:border-cyan-500/50 transition-all">
-                <img src="https://www.vectorlogo.zone/logos/canva/canva-icon.svg" alt="Canva" className="w-10 h-10" />
-              </div>
-              <span className="text-white text-xs mt-2 font-bold opacity-60">Canva</span>
-            </div>
+            ))}
           </div>
 
-          <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
-            <button 
-              onClick={(e) => scrollToSection(e, 'courses')}
-              className="bg-white text-indigo-900 font-bold px-8 py-4 rounded-xl hover:bg-gray-100 transition-all shadow-2xl shadow-white/10 text-center"
-            >
-              Tìm hiểu thêm
-            </button>
+          <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 md:gap-4 pt-2">
             <button 
               onClick={(e) => scrollToSection(e, 'register')}
-              className="bg-indigo-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 text-center"
+              className="bg-indigo-600 text-white font-black px-8 py-4 rounded-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 text-sm md:text-base"
             >
-              Đăng ký ngay
+              Đăng ký tư vấn ngay
+            </button>
+            <button 
+              onClick={(e) => scrollToSection(e, 'courses')}
+              className="bg-white/10 backdrop-blur-md text-white border border-white/20 font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all text-sm md:text-base"
+            >
+              Xem các khóa học
             </button>
           </div>
         </div>
 
-        <div className="relative group h-[250px] md:h-[380px] max-w-md mx-auto md:ml-auto md:mr-0 w-full">
-          <div className="absolute -inset-4 bg-indigo-500/20 rounded-3xl blur-2xl group-hover:bg-indigo-500/30 transition-all"></div>
+        <div className="relative group h-[220px] md:h-[400px] max-w-sm mx-auto md:ml-auto md:mr-0 w-full mt-4 md:mt-0">
+          <div className="absolute -inset-2 bg-indigo-500/20 rounded-3xl blur-xl group-hover:bg-indigo-500/30 transition-all"></div>
           
           <div className="relative h-full w-full">
-            {/* Huy hiệu Cam kết (Popup) */}
-            <div className="absolute -top-6 -right-6 md:-top-8 md:-right-8 bg-white p-3 md:p-4 rounded-2xl shadow-2xl flex items-center space-x-3 rotate-6 animate-bounce z-40 border border-indigo-100">
-              <div className="bg-green-100 p-2 rounded-lg">
-                <Sparkles className="text-green-600 w-5 h-5 md:w-6 md:h-6" />
+            <div className="absolute -top-4 -right-2 md:-top-8 md:-right-8 bg-white p-2 md:p-4 rounded-xl shadow-2xl flex items-center space-x-2 rotate-6 z-40 border border-indigo-100 scale-90 md:scale-100">
+              <div className="bg-green-100 p-1.5 rounded-lg">
+                <Sparkles className="text-green-600 w-4 h-4 md:w-6 md:h-6" />
               </div>
-              <div className="pr-2 text-left">
-                <p className="text-[9px] md:text-[10px] text-slate-500 font-black uppercase tracking-tighter leading-none mb-1">Thành thạo công cụ</p>
-                <p className="text-xs md:text-sm font-black text-slate-900 whitespace-nowrap">Kèm 1 - 1 tận tâm</p>
+              <div className="pr-1 text-left">
+                <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase leading-none mb-1 tracking-tighter">Cam kết</p>
+                <p className="text-[10px] md:text-sm font-black text-slate-900 whitespace-nowrap">Kèm 1-1 tận tâm</p>
               </div>
             </div>
 
-            <div className="relative bg-slate-800/50 backdrop-blur-sm rounded-3xl p-2 md:p-3 border border-white/10 h-full overflow-hidden shadow-2xl">
+            <div className="relative bg-slate-800/40 backdrop-blur-sm rounded-[2rem] p-1.5 md:p-3 border border-white/10 h-full overflow-hidden shadow-2xl">
               {SLIDE_IMAGES.map((slide, index) => (
                 <div 
                   key={index}
-                  className={`absolute inset-2 md:inset-3 transition-all duration-1000 ease-in-out transform ${
-                    index === currentSlide ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
+                  className={`absolute inset-1.5 md:inset-3 transition-all duration-1000 ease-in-out transform ${
+                    index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                   }`}
                 >
                   <img 
                     src={slide.url} 
                     alt={slide.title}
-                    className="w-full h-full object-cover rounded-2xl grayscale-[15%] group-hover:grayscale-0 transition-all duration-700"
+                    className="w-full h-full object-cover rounded-[1.5rem]"
                   />
-                  <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 z-10">
-                    <p className="text-white text-[9px] md:text-[10px] font-bold uppercase tracking-widest">{slide.title}</p>
+                  <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-2 py-1 rounded-md border border-white/10 z-10">
+                    <p className="text-white text-[8px] font-bold uppercase tracking-widest">{slide.title}</p>
                   </div>
                 </div>
               ))}
-
-              <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 flex space-x-2 z-20">
-                {SLIDE_IMAGES.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      index === currentSlide ? 'w-6 bg-indigo-500' : 'w-1.5 bg-white/30'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
           </div>
         </div>
