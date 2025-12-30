@@ -1,111 +1,125 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, UserCircle, LogOut, ChevronDown, Mail, LayoutDashboard } from 'lucide-react';
+import AuthModal from './AuthModal';
+import { supabase } from '../supabaseClient';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [user, setUser] = useState<{name: string, email: string} | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) setUser({
+        name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || "Học viên",
+        email: session.user.email || ""
+      });
     };
+    checkUser();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) setUser({
+        name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || "Học viên",
+        email: session.user.email || ""
+      });
+      else setUser(null);
+    });
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const scrollToSection = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id.replace('#', ''));
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      setIsOpen(false);
-    }
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setShowUserMenu(false);
   };
 
+  const isHome = location.pathname === '/';
   const navLinks = [
-    { name: 'Trang chủ', href: '#home' },
-    { name: 'Khóa học', href: '#courses' },
-    { name: 'Học phí', href: '#pricing' },
-    { name: 'Đăng ký', href: '#register' },
+    { name: 'Trang chủ', href: '/' },
+    { name: 'Khóa học', href: '/courses' },
+    { name: 'Tài nguyên', href: '/shop' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Về tôi', href: '/about' },
   ];
 
   return (
-    <nav className={`fixed w-full z-[100] transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <button onClick={(e) => scrollToSection(e, '#home')} className="flex items-center">
-              <img 
-                src="https://i.postimg.cc/prJR9FbQ/15.png" 
-                alt="Hudesign Logo" 
-                className={`h-8 md:h-12 w-auto object-contain transition-all duration-300 ${!scrolled && !isOpen ? 'brightness-0 invert' : ''}`}
-              />
-            </button>
-          </div>
-          
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-6">
+    <>
+      <nav className={`fixed w-full z-[100] transition-all duration-300 ${scrolled || !isHome ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <Link to="/" className="flex items-center outline-none">
+              <img src="https://i.postimg.cc/prJR9FbQ/15.png" alt="Logo" className={`h-8 md:h-12 w-auto transition-all ${!scrolled && isHome && !isOpen ? 'brightness-0 invert' : ''}`} />
+            </Link>
+            
+            <div className="hidden md:flex items-center space-x-6">
               {navLinks.map((link) => (
-                <button
-                  key={link.name}
-                  onClick={(e) => scrollToSection(e, link.href)}
-                  className={`text-sm font-bold transition-colors hover:text-indigo-500 ${scrolled ? 'text-slate-700' : 'text-white'}`}
-                >
+                <Link key={link.name} to={link.href} className={`text-sm font-bold transition-colors hover:text-indigo-500 ${scrolled || !isHome ? 'text-slate-700' : 'text-white'}`}>
                   {link.name}
-                </button>
+                </Link>
               ))}
-              <button
-                onClick={(e) => scrollToSection(e, '#register')}
-                className="bg-indigo-600 text-white px-5 py-2.5 rounded-full text-sm font-black hover:bg-indigo-700 transition-all shadow-lg"
-              >
-                Nhận tư vấn
-              </button>
+              
+              <div className="h-6 w-[1px] bg-slate-200"></div>
+
+              {user ? (
+                <div className="relative">
+                  <button onClick={() => setShowUserMenu(!showUserMenu)} className={`flex items-center space-x-2 px-3 py-1.5 rounded-xl border ${scrolled || !isHome ? 'text-slate-900 border-slate-100 hover:bg-slate-50' : 'text-white border-white/20 hover:bg-white/10'}`}>
+                    <div className="w-7 h-7 bg-indigo-500 rounded-lg flex items-center justify-center text-white text-[10px] font-black uppercase">{user.name.charAt(0)}</div>
+                    <span className="text-sm font-black">{user.name}</span>
+                    <ChevronDown size={14} className={showUserMenu ? 'rotate-180' : ''} />
+                  </button>
+                  {showUserMenu && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border py-2 animate-in fade-in zoom-in">
+                      <Link to="/dashboard" className="w-full text-left px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 flex items-center space-x-3" onClick={() => setShowUserMenu(false)}>
+                        <LayoutDashboard size={16} className="text-indigo-500" />
+                        <span>Bàn làm việc</span>
+                      </Link>
+                      <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 flex items-center space-x-3">
+                        <LogOut size={16} />
+                        <span>Đăng xuất</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button onClick={() => setIsAuthOpen(true)} className={`text-sm font-black ${scrolled || !isHome ? 'text-slate-900' : 'text-white'}`}>Đăng nhập</button>
+              )}
             </div>
-          </div>
-
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`${scrolled || isOpen ? 'text-slate-900' : 'text-white'} p-2 transition-colors`}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            
+            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2">
+              {isOpen ? <X size={24} className={scrolled || !isHome ? 'text-slate-900' : 'text-white'} /> : <Menu size={24} className={scrolled || !isHome ? 'text-slate-900' : 'text-white'} />}
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <div className={`md:hidden absolute top-0 left-0 w-full bg-white shadow-2xl transition-all duration-500 transform ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'} z-[-1]`}>
-        <div className="pt-20 pb-10 px-6 flex flex-col space-y-4">
-          {navLinks.map((link) => (
-            <button
-              key={link.name}
-              onClick={(e) => scrollToSection(e, link.href)}
-              className="text-slate-800 text-base font-bold py-3 border-b border-gray-100 flex justify-between items-center w-full text-left"
-            >
-              {link.name}
-              <span className="text-indigo-500">→</span>
-            </button>
-          ))}
-          <button
-            onClick={(e) => scrollToSection(e, '#register')}
-            className="bg-indigo-600 text-white py-4 rounded-xl text-center font-black shadow-md mt-4 w-full"
-          >
-            Đăng ký tư vấn ngay
-          </button>
-        </div>
-      </div>
-    </nav>
+        
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden bg-white border-b absolute top-full left-0 w-full p-6 flex flex-col space-y-4 shadow-xl animate-in slide-in-from-top duration-300">
+            {navLinks.map((link) => (
+              <Link key={link.name} to={link.href} className="text-slate-800 font-bold text-lg" onClick={() => setIsOpen(false)}>{link.name}</Link>
+            ))}
+            {user ? (
+               <Link to="/dashboard" className="bg-indigo-50 text-indigo-600 font-bold p-4 rounded-xl flex items-center space-x-2" onClick={() => setIsOpen(false)}>
+                <LayoutDashboard size={20} />
+                <span>Vào Dashboard</span>
+               </Link>
+            ) : (
+              <button onClick={() => { setIsAuthOpen(true); setIsOpen(false); }} className="bg-indigo-600 text-white font-bold p-4 rounded-xl">Đăng nhập ngay</button>
+            )}
+          </div>
+        )}
+      </nav>
+      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} onLoginSuccess={(u) => setUser(u)} />
+    </>
   );
 };
 

@@ -16,7 +16,19 @@ export interface Course {
   discountPrice: string;
   perks: string[];
   type: 'OFFLINE' | 'ONLINE';
-  curriculum?: CurriculumItem[]; // Thuộc tính mới cho lộ trình học
+  curriculum?: CurriculumItem[];
+  isSpecial?: boolean;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  category: 'Canva' | 'Photoshop' | 'Illustrator' | 'All';
+  price: number;
+  image: string;
+  description: string;
+  features: string[];
+  reviewImages?: string[];
 }
 
 export interface FormData {
@@ -25,4 +37,11 @@ export interface FormData {
   email: string;
   course: string;
   message: string;
+}
+
+export interface AICustomPlan {
+  estimatedSessions: number;
+  estimatedPrice: string;
+  syllabus: CurriculumItem[];
+  reasoning: string;
 }

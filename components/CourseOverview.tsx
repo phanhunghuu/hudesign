@@ -1,7 +1,8 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { COURSES, SPECIAL_FEATURES } from '../constants';
-import { CheckCircle2, Clock, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Clock, ArrowRight, Sparkles } from 'lucide-react';
 
 const CourseOverview: React.FC = () => {
   const scrollToDetail = (courseId: string) => {
@@ -22,7 +23,9 @@ const CourseOverview: React.FC = () => {
 
   const getCardStyle = (id: string) => {
     switch (id) {
+      case 'custom-path': return 'bg-slate-900 border-indigo-500/50 ring-4 ring-indigo-500/20';
       case 'marketing-offline': return 'bg-indigo-600 shadow-indigo-100';
+      case 'capcut-pro': return 'bg-gradient-to-br from-purple-600 to-pink-600 shadow-purple-100';
       case 'marketing-online': return 'bg-blue-600 shadow-blue-100';
       case 'photography-offline': return 'bg-orange-600 shadow-orange-100';
       case 'canva-marketing': return 'bg-cyan-600 shadow-cyan-100';
@@ -38,17 +41,25 @@ const CourseOverview: React.FC = () => {
         <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto px-4">Lộ trình được thiết kế riêng giúp bạn thành thạo công cụ nhanh nhất.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-16 md:mb-24">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6 mb-16 md:mb-24">
         {COURSES.map((course) => (
           <div 
             key={course.id} 
-            className={`${getCardStyle(course.id)} rounded-[2rem] p-6 md:p-8 transition-all hover:scale-[1.02] group flex flex-col h-full text-white relative overflow-hidden shadow-xl`}
+            className={`${getCardStyle(course.id)} rounded-[2rem] p-6 md:p-8 transition-all hover:scale-[1.02] group flex flex-col h-full text-white relative overflow-hidden shadow-xl ${course.id === 'custom-path' ? 'md:col-span-2 sm:col-span-2' : ''}`}
           >
+            {course.id === 'custom-path' && (
+              <div className="absolute top-4 right-4 animate-pulse">
+                <Sparkles className="text-indigo-400 w-6 h-6" />
+              </div>
+            )}
+            
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             
             <div className="relative z-10 flex flex-col h-full">
               <div className="bg-white/20 backdrop-blur-md w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 border border-white/30 font-black text-xs md:text-lg">
+                {course.id === 'custom-path' && "AI"}
                 {course.id === 'marketing-offline' && "PsAi"}
+                {course.id === 'capcut-pro' && "CC"}
                 {course.id === 'marketing-online' && "Zoom"}
                 {course.id === 'photography-offline' && "Photo"}
                 {course.id === 'canva-marketing' && "Cv"}
@@ -58,7 +69,7 @@ const CourseOverview: React.FC = () => {
               
               <div className="space-y-3 flex-grow">
                 <div className="flex items-start space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-white/70 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className={`w-4 h-4 mt-0.5 flex-shrink-0 ${course.id === 'custom-path' ? 'text-indigo-400' : 'text-white/70'}`} />
                   <p className="text-xs md:text-sm text-white/90 leading-relaxed font-medium line-clamp-2 md:line-clamp-none">{course.description}</p>
                 </div>
                 
@@ -68,13 +79,24 @@ const CourseOverview: React.FC = () => {
                 </div>
               </div>
 
-              <button 
-                onClick={() => scrollToDetail(course.id)}
-                className="mt-6 flex items-center justify-center space-x-2 w-full py-3 md:py-4 bg-white text-slate-900 rounded-xl md:rounded-2xl text-xs md:text-sm font-black hover:bg-opacity-90 transition-all shadow-lg active:scale-95"
-              >
-                <span>Xem chi tiết học phí</span>
-                <ArrowRight size={14} className="md:size-4" />
-              </button>
+              {course.id === 'custom-path' ? (
+                <Link 
+                  to="/custom-path"
+                  className="mt-6 flex items-center justify-center space-x-2 w-full py-3 md:py-4 bg-indigo-600 text-white rounded-xl md:rounded-2xl text-xs md:text-sm font-black hover:bg-indigo-500 transition-all shadow-lg active:scale-95"
+                >
+                  <Sparkles size={14} className="md:size-4" />
+                  <span>Khám phá ngay</span>
+                  <ArrowRight size={14} className="md:size-4" />
+                </Link>
+              ) : (
+                <button 
+                  onClick={() => scrollToDetail(course.id)}
+                  className="mt-6 flex items-center justify-center space-x-2 w-full py-3 md:py-4 bg-white text-slate-900 rounded-xl md:rounded-2xl text-xs md:text-sm font-black hover:bg-opacity-90 transition-all shadow-lg active:scale-95"
+                >
+                  <span>Xem chi tiết học phí</span>
+                  <ArrowRight size={14} className="md:size-4" />
+                </button>
+              )}
             </div>
           </div>
         ))}

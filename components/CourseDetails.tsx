@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { COURSES } from '../constants';
-import { Check, Tag, Palette, Laptop, Camera, Sparkles, Zap, List } from 'lucide-react';
+import { Check, Palette, Laptop, Camera, Sparkles, Zap, List, Video, ArrowRight } from 'lucide-react';
 import { Course } from '../types';
 import CurriculumModal from './CurriculumModal';
 
@@ -26,6 +27,17 @@ const CourseDetails: React.FC = () => {
           textAccent: 'text-indigo-600',
           gradient: 'from-indigo-600 to-purple-600',
           label: 'DESIGN PRO'
+        };
+      case 'capcut-pro':
+        return {
+          icon: <Video className="w-8 h-8 md:w-10 md:h-10 text-white" />,
+          accent: 'purple',
+          bgDark: 'bg-gradient-to-br from-purple-600 to-pink-600',
+          bgMedium: 'bg-purple-600',
+          bgLight: 'bg-purple-50',
+          textAccent: 'text-purple-600',
+          gradient: 'from-purple-600 to-pink-600',
+          label: 'VIDEO MASTER'
         };
       case 'marketing-online':
         return {
@@ -141,20 +153,33 @@ const CourseDetails: React.FC = () => {
                   </div>
 
                   <div className="mt-8 md:mt-12 flex flex-col sm:flex-row flex-wrap items-center gap-3 md:gap-6">
-                    <a 
-                      href="#register" 
-                      className={`${style.bgDark} text-white w-full sm:w-auto px-8 md:px-10 py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base hover:opacity-90 transition-all shadow-xl active:scale-95 text-center`}
-                    >
-                      Đăng ký giữ chỗ
-                    </a>
-                    
-                    <button 
-                      onClick={() => openCurriculum(course)}
-                      className={`w-full sm:w-auto border-2 ${style.textAccent} ${style.accent === 'indigo' ? 'border-indigo-600 hover:bg-indigo-50' : style.accent === 'blue' ? 'border-blue-600 hover:bg-blue-50' : style.accent === 'orange' ? 'border-orange-600 hover:bg-orange-50' : 'border-cyan-600 hover:bg-cyan-50'} px-8 md:px-10 py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base transition-all active:scale-95 flex items-center justify-center space-x-2`}
-                    >
-                      <List size={18} />
-                      <span>Xem lộ trình chi tiết</span>
-                    </button>
+                    {course.id === 'custom-path' ? (
+                      <Link 
+                        to="/custom-path" 
+                        className={`${style.bgDark} text-white w-full sm:w-auto px-10 md:px-12 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-sm md:text-lg hover:opacity-90 transition-all shadow-xl active:scale-95 text-center flex items-center justify-center space-x-3 group`}
+                      >
+                        <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
+                        <span>Tự xây lộ trình ngay</span>
+                        <ArrowRight size={20} />
+                      </Link>
+                    ) : (
+                      <>
+                        <a 
+                          href="#register" 
+                          className={`${style.bgDark} text-white w-full sm:w-auto px-8 md:px-10 py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base hover:opacity-90 transition-all shadow-xl active:scale-95 text-center`}
+                        >
+                          Đăng ký giữ chỗ
+                        </a>
+                        
+                        <button 
+                          onClick={() => openCurriculum(course)}
+                          className={`w-full sm:w-auto border-2 ${style.textAccent} ${course.id === 'marketing-offline' ? 'border-indigo-600 hover:bg-indigo-50' : course.id === 'capcut-pro' ? 'border-purple-600 hover:bg-purple-50' : course.id === 'marketing-online' ? 'border-blue-600 hover:bg-blue-50' : course.id === 'photography-offline' ? 'border-orange-600 hover:bg-orange-50' : 'border-cyan-600 hover:bg-cyan-50'} px-8 md:px-10 py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base transition-all active:scale-95 flex items-center justify-center space-x-2`}
+                        >
+                          <List size={18} />
+                          <span>Xem lộ trình chi tiết</span>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

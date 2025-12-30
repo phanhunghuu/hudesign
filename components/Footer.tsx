@@ -6,6 +6,8 @@ const Footer: React.FC = () => {
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Làm sạch URL
+    window.history.pushState(null, '', window.location.pathname);
   };
 
   return (
@@ -13,7 +15,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div className="mb-8 md:mb-0 text-center md:text-left">
-            <button onClick={scrollToTop} className="inline-block hover:opacity-80 transition-opacity">
+            <button onClick={scrollToTop} className="inline-block hover:opacity-80 transition-opacity outline-none">
               <img 
                 src="https://i.postimg.cc/prJR9FbQ/15.png" 
                 alt="Hudesign Logo" 
@@ -24,16 +26,16 @@ const Footer: React.FC = () => {
           </div>
           
           <div className="flex space-x-6">
-            <a href="#" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
               <Facebook size={20} />
             </a>
-            <a href="#" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
               <Instagram size={20} />
             </a>
-            <a href="#" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
               <Youtube size={20} />
             </a>
-            <a href="#" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
               <Linkedin size={20} />
             </a>
           </div>
@@ -42,9 +44,8 @@ const Footer: React.FC = () => {
         <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm font-medium">
           <p>© 2024 Hudesign Academy. All rights reserved.</p>
           <div className="flex space-x-8 mt-4 md:mt-0">
-            <a href="#" className="hover:text-indigo-600">Privacy Policy</a>
-            <a href="#" className="hover:text-indigo-600">Terms of Service</a>
-            <a href="#" className="hover:text-indigo-600">Cookie Policy</a>
+            <button className="hover:text-indigo-600 outline-none">Chính sách bảo mật</button>
+            <button className="hover:text-indigo-600 outline-none">Điều khoản dịch vụ</button>
           </div>
         </div>
       </div>
