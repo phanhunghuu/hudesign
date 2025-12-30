@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CUSTOM_BUILDER_OPTIONS } from '../constants';
 import { GoogleGenAI, Type } from "@google/genai";
-import { Sparkles, ArrowRight, Loader2, CheckCircle, Info, Calculator, MessageSquareText, RotateCcw } from 'lucide-react';
+import { Sparkles, ArrowRight, Loader2, CheckCircle, Info, Calculator, MessageSquareText, RotateCcw, AlertTriangle } from 'lucide-react';
 import { AICustomPlan } from '../types';
 
 const CustomPathPage: React.FC = () => {
@@ -11,6 +11,7 @@ const CustomPathPage: React.FC = () => {
   const [level, setLevel] = useState<string>('beginner');
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<AICustomPlan | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const toggleSoftware = (id: string) => {
     setSelectedSoftwares(prev => 
@@ -29,6 +30,7 @@ const CustomPathPage: React.FC = () => {
     setSelectedSoftwares([]);
     setSelectedProducts([]);
     setLevel('beginner');
+    setError(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -36,7 +38,11 @@ const CustomPathPage: React.FC = () => {
     if (selectedSoftwares.length === 0 || selectedProducts.length === 0) return;
     
     setLoading(true);
+    setError(null);
+    
     try {
+      // Initialize GoogleGenAI with process.env.API_KEY directly as per guidelines.
+      // Do not perform manual checks or UI prompts for the API key.
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const prompt = `Bạn là chuyên gia đào tạo thiết kế đồ họa tại Hudesign Academy. 
       Hãy xây dựng lộ trình học (Syllabus) cá nhân hóa cho học viên dựa trên các thông tin sau:
@@ -48,30 +54,45 @@ const CustomPathPage: React.FC = () => {
       - Mỗi buổi học 1 kèm 1 thường kéo dài 2h.
       - Giá khoảng 500.000đ - 700.000đ/buổi tùy độ phức tạp. 
       - Nếu học nhiều phần mềm/sản phẩm, hãy gom nhóm buổi học để tối ưu chi phí.
-      - Trình độ Beginner cần thêm 1 buổi tư duy nền tảng.
-      
-      Hãy trả về kết quả dưới định dạng JSON với cấu trúc:
-      {
-        "estimatedSessions": number,
-        "estimatedPrice": string (định dạng VNĐ),
-        "reasoning": "giải thích ngắn gọn tại sao chọn lộ trình này",
-        "syllabus": [
-          { "session": "Buổi x", "title": "...", "topics": ["...", "..."] }
-        ]
-      }`;
+      - Trình độ Beginner cần thêm 1 buổi tư duy nền tảng.`;
 
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
           responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              estimatedSessions: { type: Type.INTEGER },
+              estimatedPrice: { type: Type.STRING },
+              reasoning: { type: Type.STRING },
+              syllabus: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    session: { type: Type.STRING },
+                    title: { type: Type.STRING },
+                    topics: { type: Type.ARRAY, items: { type: Type.STRING } }
+                  },
+                  required: ["session", "title", "topics"]
+                }
+              }
+            },
+            required: ["estimatedSessions", "estimatedPrice", "reasoning", "syllabus"]
+          }
         }
       });
 
-      const result = JSON.parse(response.text || '{}');
+      const text = response.text;
+      if (!text) throw new Error("AI không trả về kết quả.");
+      
+      const result = JSON.parse(text);
       setPlan(result);
-    } catch (error) {
-      console.error("AI Error:", error);
+    } catch (err: any) {
+      console.error("AI Error:", err);
+      setError(err.message || "Đã có lỗi xảy ra khi kết nối với AI. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
     }
@@ -88,6 +109,13 @@ const CustomPathPage: React.FC = () => {
           <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">Build Your <span className="text-indigo-600">Own Path</span></h1>
           <p className="text-slate-500 text-lg md:text-xl font-medium max-w-2xl mx-auto">Chọn những gì bạn thực sự cần, chúng tôi sẽ thiết kế lộ trình hoàn hảo nhất dành riêng cho bạn.</p>
         </div>
+
+        {error && (
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center space-x-3 text-red-600 animate-in fade-in slide-in-from-top-4">
+            <AlertTriangle className="shrink-0" size={20} />
+            <p className="text-sm font-bold">{error}</p>
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-12 gap-8 md:gap-12 items-start">
           {/* Builder Sidebar - Left */}
@@ -262,8 +290,6 @@ const CustomPathPage: React.FC = () => {
                         <RotateCcw size={16} className="group-hover:rotate-[-45deg] transition-transform" />
                         <span>Xây lộ trình khác</span>
                       </button>
-                      
-                      <p className="text-center text-[9px] text-slate-500 mt-3 uppercase tracking-widest font-bold">Kèm 1-1 Online hoặc Offline</p>
                     </div>
                   </div>
                 ) : (
@@ -281,16 +307,6 @@ const CustomPathPage: React.FC = () => {
                     </button>
                   </div>
                 )}
-              </div>
-            </div>
-
-            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 flex items-center space-x-6">
-              <div className="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
-                <CheckCircle className="text-green-500 w-8 h-8" />
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-black text-slate-900 text-sm">Ưu đãi hôm nay</h4>
-                <p className="text-xs text-slate-500 font-medium">Giảm ngay 200.000đ khi đăng ký lộ trình cá nhân hóa lần đầu tiên.</p>
               </div>
             </div>
           </div>
