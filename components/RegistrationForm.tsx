@@ -3,7 +3,9 @@ import React, { useState, useRef } from 'react';
 import { Send, Phone, Mail, MapPin, Loader2, CheckCircle } from 'lucide-react';
 import { COURSES } from '../constants';
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx66OgnehbiEjue5ckcdsMFjxD5gNBLU6k4xU1Imkkv8U5vWJmb_hTYutpVDktf3OWO/exec"; 
+// === THAY LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY ===
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby04wYoQIDiUsavGiOEqLVjKyldFtTkPNHRzeiyzBWomFsoowHkpDjSoJDqXwWCXapF/exec"; 
+// =================================================
 
 const RegistrationForm: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -15,17 +17,12 @@ const RegistrationForm: React.FC = () => {
     setStatus('submitting');
     const formData = new FormData(formRef.current);
     try {
-      if (SCRIPT_URL && SCRIPT_URL.includes("script.google.com")) {
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: formData,
-          mode: 'no-cors'
-        });
-        setStatus('success');
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setStatus('success');
-      }
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      });
+      setStatus('success');
       formRef.current.reset();
       setTimeout(() => setStatus('idle'), 10000);
     } catch (error) {
@@ -86,18 +83,18 @@ const RegistrationForm: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Họ và tên *</label>
-                    <input name="name" required type="text" placeholder="Nguyễn Văn A" className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-sm" />
+                    <input name="name" required type="text" placeholder="Nguyễn Văn A" className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-sm outline-none" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Số điện thoại *</label>
-                    <input name="phone" required type="tel" placeholder="09xxx..." className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-sm" />
+                    <input name="phone" required type="tel" placeholder="09xxx..." className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-sm outline-none" />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Khóa học quan tâm *</label>
                   <div className="relative">
-                    <select name="course" required className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-medium text-sm pr-10">
+                    <select name="course" required className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer font-medium text-sm pr-10 outline-none">
                       <option value="">-- Chọn khóa học --</option>
                       {COURSES.map(course => <option key={course.id} value={course.title}>{course.title}</option>)}
                     </select>
@@ -109,7 +106,7 @@ const RegistrationForm: React.FC = () => {
 
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Lời nhắn</label>
-                  <textarea name="message" rows={3} placeholder="Ví dụ: Mình muốn học Photoshop để tự thiết kế banner bán hàng..." className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all resize-none font-medium text-sm"></textarea>
+                  <textarea name="message" rows={3} placeholder="Ví dụ: Mình muốn học Photoshop để tự thiết kế banner bán hàng..." className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all resize-none font-medium text-sm outline-none"></textarea>
                 </div>
 
                 <button 

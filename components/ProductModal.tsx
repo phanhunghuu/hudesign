@@ -12,6 +12,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [mainImageLoaded, setMainImageLoaded] = useState(false);
 
   // Thông tin ngân hàng
   const bankInfo = {
@@ -32,7 +33,6 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
-    // Giả lập gửi thông báo về hệ thống
     setTimeout(() => {
       setStatus('success');
     }, 1500);
@@ -48,9 +48,18 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
         </button>
 
         {/* Product Info Side */}
-        <div className="md:w-1/2 p-6 md:p-10 bg-slate-50 overflow-y-auto custom-scrollbar">
-          <div className="aspect-square rounded-3xl overflow-hidden mb-6 shadow-lg bg-white">
-            <img src={product.image} className="w-full h-full object-cover" alt={product.name} />
+        <div className="md:w-1/2 p-6 md:p-10 bg-slate-50 overflow-y-auto no-scrollbar">
+          <div className="aspect-square rounded-3xl overflow-hidden mb-6 shadow-lg bg-white relative">
+            {!mainImageLoaded && (
+              <div className="absolute inset-0 bg-slate-200 animate-pulse-fast"></div>
+            )}
+            <img 
+              src={product.image} 
+              onLoad={() => setMainImageLoaded(true)}
+              loading="lazy"
+              className={`w-full h-full object-cover transition-opacity duration-500 ${mainImageLoaded ? 'opacity-100' : 'opacity-0'}`} 
+              alt={product.name} 
+            />
           </div>
           
           <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-4">{product.name}</h2>
@@ -71,7 +80,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
 
           {/* Review Images Section */}
           {product.reviewImages && product.reviewImages.length > 0 && (
-            <div className="space-y-4 pt-6 border-t border-slate-200">
+            <div className="space-y-4 pt-6 border-t border-slate-200 mb-6">
               <div className="flex items-center space-x-2 text-indigo-600">
                 <ImageIcon size={16} />
                 <h4 className="text-sm font-black uppercase tracking-wider">Ảnh Review Thực Tế</h4>
@@ -80,13 +89,14 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
                 {product.reviewImages.slice(0, 4).map((img, i) => (
                   <div 
                     key={i} 
-                    className="aspect-square rounded-2xl overflow-hidden shadow-sm border border-white cursor-pointer group relative"
+                    className="aspect-square rounded-2xl overflow-hidden shadow-sm border border-white cursor-pointer group relative bg-slate-200"
                     onClick={() => setPreviewImage(img)}
                   >
                     <img 
                       src={img} 
+                      loading="lazy"
                       alt={`Review ${i + 1}`} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500" 
                     />
                     <div className="absolute inset-0 bg-indigo-600/0 group-hover:bg-indigo-600/20 transition-colors flex items-center justify-center">
                       <div className="bg-white/90 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300">
@@ -101,15 +111,15 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
         </div>
 
         {/* Payment Side */}
-        <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto border-l border-slate-100 bg-white custom-scrollbar">
+        <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto border-l border-slate-100 bg-white no-scrollbar">
           {status === 'success' ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 py-10">
               <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center shadow-inner">
                 <Check size={48} className="text-green-600" />
               </div>
               <div className="space-y-4">
                 <h3 className="text-2xl font-black text-slate-900">Gửi thông báo thành công!</h3>
-                <div className="text-slate-600 font-medium leading-relaxed bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-2 text-sm">
+                <div className="text-slate-600 font-medium leading-relaxed bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-2 text-sm text-left">
                   <p>Cảm ơn bạn đã tin tưởng Hudesign.</p>
                   <p>Xin vui lòng kiểm tra hộp thư (mail) trong vòng 24h.</p>
                   <p>Nếu không có vui lòng liên hệ hotline: <br/><span className="text-indigo-600 font-black text-base">0912.412.132</span></p>
@@ -124,8 +134,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
               <div className="text-center">
                 <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-3">Quét mã để thanh toán</p>
                 <div className="inline-block p-4 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-sm relative group">
-                   <img src={qrUrl} alt="QR Thanh toán" className="w-48 h-48 md:w-60 md:h-60" />
-                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-[2.5rem]"></div>
+                   <img src={qrUrl} alt="QR Thanh toán" className="w-48 h-48 md:w-60 md:h-60" loading="lazy" />
                 </div>
                 <p className="mt-4 text-3xl font-black text-slate-900 tracking-tight">{product.price.toLocaleString('vi-VN')} đ</p>
               </div>
@@ -140,13 +149,13 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
                 </div>
                 <div className="flex items-start space-x-3 text-[10px] text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100">
                   <AlertCircle size={16} className="shrink-0" />
-                  <p className="font-bold leading-tight uppercase">Vui lòng nhập đúng nội dung để chúng tôi gửi file qua Email nhanh nhất.</p>
+                  <p className="font-bold leading-tight uppercase text-left">Vui lòng nhập đúng nội dung để chúng tôi gửi file qua Email nhanh nhất.</p>
                 </div>
               </div>
 
               <form onSubmit={handleConfirm} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email nhận tài nguyên *</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 text-left block">Email nhận tài nguyên *</label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input required type="email" placeholder="Nhập email của bạn để nhận file" className="w-full pl-12 pr-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-bold text-sm transition-all" />
@@ -171,11 +180,12 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
           className="fixed inset-0 z-[200] bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
           onClick={() => setPreviewImage(null)}
         >
-          <button className="absolute top-10 right-10 text-white hover:rotate-90 transition-transform p-2 bg-white/10 rounded-full">
+          <button className="absolute top-10 right-10 text-white hover:rotate-90 transition-transform p-2 bg-white/10 rounded-full z-50">
             <X size={32} />
           </button>
           <img 
             src={previewImage} 
+            loading="lazy"
             className="max-w-full max-h-full rounded-2xl shadow-2xl object-contain animate-in zoom-in duration-300" 
             alt="Enlarged Review" 
           />

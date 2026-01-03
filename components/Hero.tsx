@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const SLIDE_IMAGES = [
   {
@@ -66,18 +67,18 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 md:gap-4 pt-2">
-            <button 
-              onClick={(e) => scrollToSection(e, 'register')}
-              className="bg-indigo-600 text-white font-black px-8 py-4 rounded-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 text-sm md:text-base"
+            <Link 
+              to="/register"
+              className="bg-indigo-600 text-white font-black px-8 py-4 rounded-xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 text-sm md:text-base text-center"
             >
               Đăng ký tư vấn ngay
-            </button>
-            <button 
-              onClick={(e) => scrollToSection(e, 'courses')}
-              className="bg-white/10 backdrop-blur-md text-white border border-white/20 font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all text-sm md:text-base"
+            </Link>
+            <Link 
+              to="/courses"
+              className="bg-white/10 backdrop-blur-md text-white border border-white/20 font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all text-sm md:text-base text-center"
             >
               Xem các khóa học
-            </button>
+            </Link>
           </div>
         </div>
 

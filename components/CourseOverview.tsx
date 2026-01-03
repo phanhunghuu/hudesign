@@ -1,26 +1,10 @@
 
 import { Link } from 'react-router-dom';
 import { COURSES, SPECIAL_FEATURES } from '../constants';
-import { CheckCircle2, Clock, ArrowRight, Sparkles } from 'lucide-react';
+import { CheckCircle2, Clock, ArrowRight, Sparkles, Flame } from 'lucide-react';
 import React from 'react';
 
 const CourseOverview: React.FC = () => {
-  const scrollToDetail = (courseId: string) => {
-    const element = document.getElementById(`detail-${courseId}`);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   const getCardStyle = (id: string) => {
     switch (id) {
       case 'custom-path': return 'bg-slate-900 border-indigo-500/30 ring-4 ring-indigo-500/10';
@@ -41,13 +25,21 @@ const CourseOverview: React.FC = () => {
         <p className="text-slate-500 text-sm max-w-xl mx-auto font-medium">Lộ trình 1 kèm 1 thực chiến, học đúng thứ bạn cần.</p>
       </div>
 
-      {/* Grid optimized for balance: 1 col mobile, 2 cols tablet, 3 cols desktop */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-20">
         {COURSES.map((course) => (
           <div 
             key={course.id} 
             className={`${getCardStyle(course.id)} rounded-[2.5rem] p-8 md:p-10 transition-all duration-500 hover:-translate-y-2 group flex flex-col h-full text-white relative overflow-hidden shadow-2xl`}
           >
+            {course.isHot && (
+              <div className="absolute top-0 right-0 z-20">
+                <div className="bg-red-500 text-white text-[10px] font-black py-1 px-8 rotate-45 translate-x-[25px] translate-y-[10px] shadow-sm flex items-center justify-center space-x-1">
+                  <Flame size={10} fill="currentColor" />
+                  <span>HOT</span>
+                </div>
+              </div>
+            )}
+            
             {course.id === 'custom-path' && (
               <div className="absolute top-6 right-6 animate-pulse">
                 <Sparkles className="text-indigo-400 w-6 h-6" />
@@ -66,12 +58,19 @@ const CourseOverview: React.FC = () => {
                 {course.id === 'canva-marketing' && "Cv"}
               </div>
               
-              <h3 className="text-xl md:text-2xl font-black mb-4 leading-tight">{course.title}</h3>
+              <h3 className="text-xl md:text-2xl font-black mb-2 leading-tight">{course.title}</h3>
               
+              {course.id !== 'custom-path' && (
+                <div className="mb-4">
+                  <p className="text-[10px] font-bold text-white/50 line-through decoration-white/30">{course.originalPrice}</p>
+                  <p className="text-2xl md:text-3xl font-black text-white">{course.discountPrice}</p>
+                </div>
+              )}
+
               <div className="space-y-4 flex-grow">
                 <div className="flex items-start space-x-3">
                   <CheckCircle2 className={`w-5 h-5 mt-0.5 flex-shrink-0 ${course.id === 'custom-path' ? 'text-indigo-400' : 'text-white/60'}`} />
-                  <p className="text-sm text-white/90 leading-relaxed font-medium">{course.description}</p>
+                  <p className="text-sm text-white/90 leading-relaxed font-medium line-clamp-2">{course.description}</p>
                 </div>
                 
                 <div className="flex items-center space-x-3 bg-black/10 w-fit px-4 py-2 rounded-full border border-white/5">
@@ -81,31 +80,20 @@ const CourseOverview: React.FC = () => {
               </div>
 
               <div className="mt-10">
-                {course.id === 'custom-path' ? (
-                  <Link 
-                    to="/custom-path"
-                    className="flex items-center justify-center space-x-3 w-full py-4 bg-indigo-600 text-white rounded-2xl text-sm font-black hover:bg-indigo-500 transition-all shadow-xl active:scale-95 group/btn"
-                  >
-                    <Sparkles size={18} />
-                    <span>XÂY LỘ TRÌNH NGAY</span>
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                ) : (
-                  <button 
-                    onClick={() => scrollToDetail(course.id)}
-                    className="flex items-center justify-center space-x-3 w-full py-4 bg-white text-slate-900 rounded-2xl text-sm font-black hover:bg-indigo-50 transition-all shadow-xl active:scale-95 group/btn"
-                  >
-                    <span>XEM CHI TIẾT HỌC PHÍ</span>
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-                )}
+                <Link 
+                  to={course.id === 'custom-path' ? "/custom-path" : `/courses/${course.id}`}
+                  className={`flex items-center justify-center space-x-3 w-full py-4 rounded-2xl text-sm font-black transition-all shadow-xl active:scale-95 group/btn ${course.id === 'custom-path' ? 'bg-indigo-600 text-white hover:bg-indigo-500' : 'bg-white text-slate-900 hover:bg-indigo-50'}`}
+                >
+                  {course.id === 'custom-path' && <Sparkles size={18} />}
+                  <span>{course.id === 'custom-path' ? 'XÂY LỘ TRÌNH NGAY' : 'CHI TIẾT KHÓA HỌC'}</span>
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Features section remains similar but with refined spacing */}
       <div className="bg-slate-900 rounded-[3rem] p-10 md:p-16 text-white relative overflow-hidden shadow-2xl border border-white/5">
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent"></div>
         

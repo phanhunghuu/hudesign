@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Facebook, Instagram, Youtube, Linkedin } from 'lucide-react';
+import { Facebook, Music2, MessageCircle } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const scrollToTop = (e: React.MouseEvent) => {
@@ -26,17 +26,14 @@ const Footer: React.FC = () => {
           </div>
           
           <div className="flex space-x-6">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
+            <a href="https://facebook.com/phanhung.huu" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm" title="Facebook">
               <Facebook size={20} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
-              <Instagram size={20} />
+            <a href="https://www.tiktok.com/@hudesign" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm" title="TikTok">
+              <Music2 size={20} />
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
-              <Youtube size={20} />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm">
-              <Linkedin size={20} />
+            <a href="https://zalo.me/0912412132" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all shadow-sm" title="Zalo">
+              <MessageCircle size={20} />
             </a>
           </div>
         </div>

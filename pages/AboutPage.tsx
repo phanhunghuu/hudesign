@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Award, Users, Instagram, Facebook, Youtube, Sparkles, Shield, Heart } from 'lucide-react';
+import { Award, Users, Facebook, Music2, MessageCircle, Sparkles, Shield, Heart } from 'lucide-react';
 
 const AboutPage: React.FC = () => {
   // === THAY ĐỔI LINK ẢNH CỦA BẠN TẠI ĐÂY ===
@@ -71,11 +71,17 @@ const AboutPage: React.FC = () => {
             </div>
 
             <div className="flex items-center space-x-6 pt-4">
-              <p className="text-sm font-black text-slate-900 uppercase tracking-widest">Follow me:</p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><Facebook size={20} /></a>
-                <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><Instagram size={20} /></a>
-                <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><Youtube size={20} /></a>
+              <p className="text-sm font-black text-slate-900 uppercase tracking-widest">FOLLOW ME:</p>
+              <div className="flex space-x-5">
+                <a href="https://facebook.com/phanhung.huu" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-all hover:scale-110" title="Facebook">
+                  <Facebook size={24} />
+                </a>
+                <a href="https://www.tiktok.com/@hudesign" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-all hover:scale-110" title="TikTok">
+                  <Music2 size={24} />
+                </a>
+                <a href="https://zalo.me/0912412132" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-indigo-600 transition-all hover:scale-110" title="Zalo">
+                  <MessageCircle size={24} />
+                </a>
               </div>
             </div>
           </div>

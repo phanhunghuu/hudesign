@@ -1,20 +1,10 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { COURSES } from '../constants';
-import { Check, Palette, Laptop, Camera, Sparkles, Zap, List, Video, ArrowRight } from 'lucide-react';
-import { Course } from '../types';
-import CurriculumModal from './CurriculumModal';
+import { Check, Palette, Laptop, Camera, Sparkles, Zap, Video, ArrowRight, LayoutGrid } from 'lucide-react';
 
 const CourseDetails: React.FC = () => {
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openCurriculum = (course: Course) => {
-    setSelectedCourse(course);
-    setIsModalOpen(true);
-  };
-
   const getCourseStyle = (id: string) => {
     switch (id) {
       case 'marketing-offline':
@@ -104,7 +94,6 @@ const CourseDetails: React.FC = () => {
               id={`detail-${course.id}`}
               className={`flex flex-col lg:flex-row bg-white rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-xl shadow-slate-100 border border-slate-100 transition-all duration-300 ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
             >
-              {/* Sidebar/Top Bar section */}
               <div className={`lg:w-1/3 ${style.bgDark} relative flex flex-col justify-center items-center p-8 md:p-12 overflow-hidden min-h-[auto] md:min-h-[400px]`}>
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase bg-white/20 backdrop-blur-md text-white border border-white/30">
@@ -124,13 +113,12 @@ const CourseDetails: React.FC = () => {
                   </div>
 
                   <div className="space-y-0.5 md:space-y-1">
-                    <p className="text-white/60 line-through text-[11px] md:text-sm font-bold">{course.originalPrice}</p>
+                    <p className="text-white/50 line-through text-[12px] md:text-lg font-bold decoration-white/30">{course.originalPrice}</p>
                     <p className="text-3xl md:text-5xl font-black text-white">{course.discountPrice}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Main content section */}
               <div className="lg:w-2/3 p-6 md:p-14 flex flex-col justify-center relative bg-white">
                 <div className="relative z-10">
                   <h3 className="text-xl md:text-3xl font-black text-slate-900 leading-tight mb-3 md:mb-4">
@@ -164,20 +152,20 @@ const CourseDetails: React.FC = () => {
                       </Link>
                     ) : (
                       <>
-                        <a 
-                          href="#register" 
+                        <Link 
+                          to={`/register?course=${course.id}`} 
                           className={`${style.bgDark} text-white w-full sm:w-auto px-8 md:px-10 py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base hover:opacity-90 transition-all shadow-xl active:scale-95 text-center`}
                         >
                           Đăng ký giữ chỗ
-                        </a>
+                        </Link>
                         
-                        <button 
-                          onClick={() => openCurriculum(course)}
+                        <Link 
+                          to={`/courses/${course.id}`}
                           className={`w-full sm:w-auto border-2 ${style.textAccent} ${course.id === 'marketing-offline' ? 'border-indigo-600 hover:bg-indigo-50' : course.id === 'capcut-pro' ? 'border-purple-600 hover:bg-purple-50' : course.id === 'marketing-online' ? 'border-blue-600 hover:bg-blue-50' : course.id === 'photography-offline' ? 'border-orange-600 hover:bg-orange-50' : 'border-cyan-600 hover:bg-cyan-50'} px-8 md:px-10 py-4 rounded-xl md:rounded-2xl font-black text-sm md:text-base transition-all active:scale-95 flex items-center justify-center space-x-2`}
                         >
-                          <List size={18} />
-                          <span>Xem lộ trình chi tiết</span>
-                        </button>
+                          <LayoutGrid size={18} />
+                          <span>Xem chi tiết & Lộ trình</span>
+                        </Link>
                       </>
                     )}
                   </div>
@@ -187,13 +175,6 @@ const CourseDetails: React.FC = () => {
           );
         })}
       </div>
-
-      <CurriculumModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        course={selectedCourse} 
-        accentColor={selectedCourse ? getCourseStyle(selectedCourse.id).bgDark : 'bg-indigo-600'}
-      />
     </div>
   );
 };

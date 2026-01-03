@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { CUSTOM_BUILDER_OPTIONS } from '../constants';
 import { GoogleGenAI, Type } from "@google/genai";
-import { Sparkles, ArrowRight, Loader2, CheckCircle, Info, Calculator, MessageSquareText, RotateCcw, AlertTriangle } from 'lucide-react';
+import { Sparkles, ArrowRight, Loader2, CheckCircle, Info, Calculator, MessageSquareText, RotateCcw, AlertTriangle, ExternalLink, Globe } from 'lucide-react';
 import { AICustomPlan } from '../types';
 
 const CustomPathPage: React.FC = () => {
@@ -11,7 +11,7 @@ const CustomPathPage: React.FC = () => {
   const [level, setLevel] = useState<string>('beginner');
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<AICustomPlan | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{message: string, isReferrerError?: boolean} | null>(null);
 
   const toggleSoftware = (id: string) => {
     setSelectedSoftwares(prev => 
@@ -41,8 +41,6 @@ const CustomPathPage: React.FC = () => {
     setError(null);
     
     try {
-      // Initialize GoogleGenAI with process.env.API_KEY directly as per guidelines.
-      // Do not perform manual checks or UI prompts for the API key.
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const prompt = `Bạn là chuyên gia đào tạo thiết kế đồ họa tại Hudesign Academy. 
       Hãy xây dựng lộ trình học (Syllabus) cá nhân hóa cho học viên dựa trên các thông tin sau:
@@ -92,7 +90,18 @@ const CustomPathPage: React.FC = () => {
       setPlan(result);
     } catch (err: any) {
       console.error("AI Error:", err);
-      setError(err.message || "Đã có lỗi xảy ra khi kết nối với AI. Vui lòng thử lại sau.");
+      const errorMsg = err.message || "";
+      
+      if (errorMsg.includes("API_KEY_HTTP_REFERRER_BLOCKED") || errorMsg.includes("403")) {
+        setError({
+          message: "Lỗi domain: API Key đang chặn truy cập từ hudesign.site.",
+          isReferrerError: true
+        });
+      } else {
+        setError({
+          message: "Đã có lỗi xảy ra khi kết nối với AI. Vui lòng thử lại sau."
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -111,9 +120,43 @@ const CustomPathPage: React.FC = () => {
         </div>
 
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center space-x-3 text-red-600 animate-in fade-in slide-in-from-top-4">
-            <AlertTriangle className="shrink-0" size={20} />
-            <p className="text-sm font-bold">{error}</p>
+          <div className="max-w-4xl mx-auto mb-10 overflow-hidden bg-white border border-red-100 rounded-[2.5rem] shadow-2xl shadow-red-500/5 animate-in fade-in slide-in-from-top-4">
+            <div className="flex flex-col md:flex-row">
+              <div className="bg-red-50 p-8 flex items-center justify-center shrink-0">
+                <AlertTriangle className="text-red-600" size={40} />
+              </div>
+              <div className="p-8 space-y-6">
+                <div>
+                  <h3 className="font-black text-slate-900 text-xl uppercase tracking-tight mb-2">
+                    {error.isReferrerError ? "LỖI CHẶN TÊN MIỀN (REFERRER BLOCKED)" : "LỖI KẾT NỐI AI"}
+                  </h3>
+                  <p className="text-slate-500 text-sm font-medium leading-relaxed">{error.message}</p>
+                </div>
+                
+                {error.isReferrerError && (
+                  <div className="space-y-4 bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <p className="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                      <Globe size={14} className="text-indigo-600" />
+                      Cách khắc phục nhanh:
+                    </p>
+                    <ul className="text-xs text-slate-600 space-y-2 font-medium">
+                      <li className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
+                        <span>Truy cập <a href="https://console.cloud.google.com/apis/credentials" target="_blank" className="text-indigo-600 font-bold hover:underline">Google Cloud Console</a></span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
+                        <span>Sửa API Key, tại mục <b>Website restrictions</b>, hãy nhập chính xác: <code className="bg-white border px-2 py-0.5 rounded text-indigo-600 font-bold">*.hudesign.site/*</code></span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] shrink-0 mt-0.5">3</span>
+                        <span>Nhấn <b>Save</b> và đợi 5 phút để Google cập nhật.</span>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
