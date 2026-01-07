@@ -21,8 +21,8 @@ const CourseOverview: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10 md:mb-12 space-y-3">
         <h2 className="text-indigo-600 font-bold tracking-widest uppercase text-[10px]">Chương trình đào tạo</h2>
-        <p className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">DANH SÁCH KHÓA HỌC</p>
-        <p className="text-slate-500 text-sm max-w-xl mx-auto font-medium">Lộ trình 1 kèm 1 thực chiến, học đúng thứ bạn cần.</p>
+        <p className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Danh sách khóa học</p>
+        <p className="text-slate-500 text-sm max-w-xl mx-auto font-thin">Lộ trình 1 kèm 1 thực chiến, học đúng thứ bạn cần.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-20">
@@ -62,7 +62,7 @@ const CourseOverview: React.FC = () => {
               
               {course.id !== 'custom-path' && (
                 <div className="mb-4">
-                  <p className="text-[10px] font-bold text-white/50 line-through decoration-white/30">{course.originalPrice}</p>
+                  <p className="text-[10px] font-black text-white/50 line-through decoration-white/30">{course.originalPrice}</p>
                   <p className="text-2xl md:text-3xl font-black text-white">{course.discountPrice}</p>
                 </div>
               )}
@@ -70,12 +70,14 @@ const CourseOverview: React.FC = () => {
               <div className="space-y-4 flex-grow">
                 <div className="flex items-start space-x-3">
                   <CheckCircle2 className={`w-5 h-5 mt-0.5 flex-shrink-0 ${course.id === 'custom-path' ? 'text-indigo-400' : 'text-white/60'}`} />
-                  <p className="text-sm text-white/90 leading-relaxed font-medium line-clamp-2">{course.description}</p>
+                  {/* CHỈNH font-thin Ở ĐÂY */}
+                  <p className="text-sm text-white/90 leading-relaxed font-thin line-clamp-2">{course.description}</p>
                 </div>
                 
                 <div className="flex items-center space-x-3 bg-black/10 w-fit px-4 py-2 rounded-full border border-white/5">
                   <Clock className="w-4 h-4 text-white/50" />
-                  <span className="text-xs text-white/80 font-black uppercase tracking-wider">{course.duration}</span>
+                  {/* CHỈNH font-thin Ở ĐÂY */}
+                  <span className="text-xs text-white/80 font-thin uppercase tracking-wider">{course.duration}</span>
                 </div>
               </div>
 
@@ -102,8 +104,9 @@ const CourseOverview: React.FC = () => {
             <div className="inline-block bg-indigo-600/20 px-4 py-1.5 rounded-full border border-indigo-500/30">
                <span className="text-indigo-400 text-[10px] font-black uppercase tracking-widest">Core Values</span>
             </div>
-            <h3 className="text-3xl md:text-4xl font-black leading-tight uppercase">Tại sao chọn <br/><span className="text-indigo-500 text-6xl">HU</span>DESIGN?</h3>
-            <p className="text-slate-400 text-base leading-relaxed font-medium">Chúng tôi không chỉ dạy công cụ, chúng tôi dạy tư duy thẩm mỹ thực chiến để bạn tự tin sáng tạo.</p>
+            <h3 className="text-3xl md:text-4xl font-black leading-tight">Tại sao chọn <br/><span className="text-indigo-500 text-6xl">HU</span>DESIGN?</h3>
+            {/* CHỈNH font-thin Ở ĐÂY */}
+            <p className="text-slate-400 text-base leading-relaxed font-thin">Chúng tôi không chỉ dạy công cụ, chúng tôi dạy tư duy thẩm mỹ thực chiến để bạn tự tin sáng tạo.</p>
           </div>
           
           <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -112,8 +115,9 @@ const CourseOverview: React.FC = () => {
                 <div className="bg-white/5 p-5 rounded-2xl inline-block border border-white/10 backdrop-blur-md group-hover:bg-indigo-600/20 group-hover:border-indigo-500/50 transition-all duration-300">
                   {React.cloneElement(feature.icon as React.ReactElement<any>, { className: 'w-8 h-8 text-indigo-400' })}
                 </div>
-                <h4 className="text-lg font-black uppercase tracking-tight">{feature.title}</h4>
-                <p className="text-slate-400 text-xs leading-relaxed font-medium">{feature.description}</p>
+                <h4 className="text-lg font-black tracking-tight">{feature.title}</h4>
+                {/* CHỈNH font-thin Ở ĐÂY */}
+                <p className="text-slate-400 text-xs leading-relaxed font-thin">{feature.description}</p>
               </div>
             ))}
           </div>

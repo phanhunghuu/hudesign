@@ -4,7 +4,7 @@ import { Award, Users, Facebook, Music2, MessageCircle, Sparkles, Shield, Heart 
 
 const AboutPage: React.FC = () => {
   // === THAY ĐỔI LINK ẢNH CỦA BẠN TẠI ĐÂY ===
-  const myPortraitUrl = "https://i.postimg.cc/K8cZt5LQ/HUDESIGN-S-PORTFOLIO.png"; 
+  const myPortraitUrl = "https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767623579/HUDESIGN-S-PORTFOLIO_fwmpdw.png"; 
   // =========================================
 
   return (

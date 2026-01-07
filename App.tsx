@@ -12,15 +12,15 @@ import BlogPage from './pages/BlogPage';
 import AboutPage from './pages/AboutPage';
 import DashboardPage from './pages/DashboardPage';
 import RegistrationPage from './pages/RegistrationPage';
+import PortfolioPage from './pages/PortfolioPage';
+import MyNewProject from './pages/MyNewProject';
+import DesignBriefPage from './pages/DesignBriefPage'; // Import mới
 
-// Thành phần hỗ trợ cuộn lên đầu trang khi chuyển route
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  
   return null;
 };
 
@@ -37,10 +37,13 @@ const App: React.FC = () => {
             <Route path="/courses/:courseId" element={<CourseDetailPage />} />
             <Route path="/custom-path" element={<CustomPathPage />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/my-new-project" element={<MyNewProject />} />
+            <Route path="/design-brief" element={<DesignBriefPage />} /> {/* Đường dẫn mới */}
           </Routes>
         </main>
         <Footer />

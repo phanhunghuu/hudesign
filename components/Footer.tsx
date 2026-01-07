@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
           <div className="mb-8 md:mb-0 text-center md:text-left">
             <button onClick={scrollToTop} className="inline-block hover:opacity-80 transition-opacity outline-none">
               <img 
-                src="https://i.postimg.cc/prJR9FbQ/15.png" 
+                src="https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767743711/15_k80j2r.png" 
                 alt="Hudesign Logo" 
                 className="h-12 md:h-16 w-auto object-contain mx-auto md:mx-0"
               />

@@ -81,7 +81,7 @@ const CourseDetails: React.FC = () => {
       <div className="text-center mb-10 md:mb-16 space-y-3">
         <h2 className="text-indigo-600 font-bold tracking-widest uppercase text-[10px] md:text-sm">Ưu đãi học phí</h2>
         <p className="text-2xl md:text-5xl font-black text-slate-900 leading-tight">Đầu tư xứng đáng</p>
-        <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto">Giảm thêm 500k cho học viên đăng ký nhóm từ 2 người trở lên.</p>
+        <p className="text-slate-500 text-sm md:text-base max-w-xl mx-auto font-thin">Giảm thêm 500k cho học viên đăng ký nhóm từ 2 người trở lên.</p>
       </div>
 
       <div className="space-y-8 md:space-y-16">
@@ -125,7 +125,8 @@ const CourseDetails: React.FC = () => {
                     {course.title}
                   </h3>
 
-                  <p className="text-slate-600 mb-6 md:mb-10 text-sm md:text-lg leading-relaxed font-medium">
+                  {/* CHỈNH font-thin Ở ĐÂY */}
+                  <p className="text-slate-600 mb-6 md:mb-10 text-sm md:text-lg leading-relaxed font-thin">
                     {course.content}
                   </p>
 
@@ -135,7 +136,8 @@ const CourseDetails: React.FC = () => {
                         <div className={`mt-0.5 flex-shrink-0 w-5 h-5 md:w-6 md:h-6 ${style.bgLight} rounded-md md:rounded-lg flex items-center justify-center`}>
                           <Check className={`w-3 h-3 md:w-3.5 md:h-3.5 ${style.textAccent}`} strokeWidth={4} />
                         </div>
-                        <span className="text-xs md:text-sm text-slate-600 font-bold leading-tight md:leading-snug">{perk}</span>
+                        {/* CHỈNH font-thin Ở ĐÂY */}
+                        <span className="text-xs md:text-sm text-slate-600 font-thin leading-tight md:leading-snug">{perk}</span>
                       </div>
                     ))}
                   </div>

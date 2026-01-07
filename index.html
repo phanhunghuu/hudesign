@@ -5,59 +5,80 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hudesign - Học viện Thiết kế & Tài nguyên Sáng tạo</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767743704/logo-hu_g8syiw.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767743704/logo-hu_g8syiw.png" />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+    
     <style>
-      :root { scroll-padding-top: 80px; }
+      :root { 
+        scroll-padding-top: 80px;
+        /* BẠN CÓ THỂ CHỈNH CÁC BIẾN DƯỚI ĐÂY ĐỂ ĐỔI NHANH */
+        --font-weight-headings: 800; /* Mặc định cho tiêu đề h1-h6 (800 là Black) */
+        --font-weight-body: 400;     /* Mặc định cho nội dung văn bản (400 là Regular) */
+      }
+      
       body { 
         font-family: 'Inter', sans-serif; 
+        font-weight: var(--font-weight-body);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
+
+      /* Chỉnh độ đậm cho TOÀN BỘ tiêu đề */
+      h1, h2, h3, h4, h5, h6, .font-heading {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: var(--font-weight-headings);
+        letter-spacing: -0.02em;
+      }
+
       .bg-gradient-hudesign { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
       
-      /* Hide scrollbar */
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-      /* Skeleton Pulse Animation */
       @keyframes pulse {
         0%, 100% { opacity: 1; }
         50% { opacity: .5; }
       }
       .animate-pulse-fast { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
       
-      .image-placeholder {
-        background-color: #f1f5f9;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      /* Custom animations */
       @keyframes float {
         0% { transform: translateY(0px); }
         50% { transform: translateY(-10px); }
         100% { transform: translateY(0px); }
       }
       .animate-float { animation: float 3s ease-in-out infinite; }
+
+      /* CÁC CLASS TIỆN ÍCH ĐỂ BẠN DÙNG TRONG CODE JSX */
+      .font-thin { font-weight: 300 !important; }
+      .font-regular { font-weight: 400 !important; }
+      .font-medium { font-weight: 500 !important; }
+      .font-semibold { font-weight: 600 !important; }
+      .font-bold { font-weight: 700 !important; }
+      .font-extrabold { font-weight: 800 !important; }
+      .font-black { font-weight: 900 !important; }
     </style>
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-router-dom": "https://esm.sh/react-router-dom@6.22.3",
-    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.7",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
-  }
-}
-</script>
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "react-router-dom": "https://esm.sh/react-router-dom@6.22.3",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.7",
+        "vite": "https://esm.sh/vite@^7.3.0",
+        "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+        "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+      }
+    }
+    </script>
   <link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-gray-50 text-slate-900">

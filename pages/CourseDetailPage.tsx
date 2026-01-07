@@ -5,10 +5,15 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { 
   ArrowLeft, CheckCircle, Clock, Sparkles, Send, Loader2, 
   Calendar, Zap, ChevronRight, MessageSquare, Flame, 
-  Target, Package, RefreshCcw, Info
+  Target, Package, RefreshCcw, Info, X, Phone, User
 } from 'lucide-react';
 import { COURSES } from '../constants';
 import { AICustomPlan, Course } from '../types';
+
+// === THÔNG TIN TELEGRAM CỦA BẠN (Dán mã bạn vừa lấy vào đây) ===
+const TELEGRAM_BOT_TOKEN = "7496763782:AAFOYZzRsBNgCLpdDlJWXMUBwmKwtzCXQBI"; // Dán BOT_TOKEN vào đây
+const TELEGRAM_CHAT_ID = "308222651"; // Dán CHAT_ID vào đây
+// ===================================================
 
 const CourseDetailPage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -21,6 +26,12 @@ const CourseDetailPage: React.FC = () => {
   const [purpose, setPurpose] = useState('');
   const [products, setProducts] = useState('');
   const [intensity, setIntensity] = useState('standard');
+
+  // Popup State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contactInfo, setContactInfo] = useState({ name: '', phone: '' });
+  const [isSending, setIsSending] = useState(false);
+  const [sendSuccess, setSendSuccess] = useState(false);
 
   useEffect(() => {
     const found = COURSES.find(c => c.id === courseId);
@@ -55,6 +66,7 @@ const CourseDetailPage: React.FC = () => {
         model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
+          thinkingConfig: { thinkingBudget: 0 },
           responseMimeType: "application/json",
           responseSchema: {
             type: Type.OBJECT,
@@ -85,6 +97,46 @@ const CourseDetailPage: React.FC = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConsultation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiPlan || !course) return;
+
+    setIsSending(true);
+    
+    // Format nội dung gửi đi (Sử dụng Markdown để tin nhắn Telegram đẹp hơn)
+    const syllabusText = aiPlan.syllabus.map(s => 
+      `*${s.session}: ${s.title}*\n• ${s.topics.join('\n• ')}`
+    ).join('\n\n');
+
+    const message = `🚀 *YÊU CẦU TƯ VẤN LỘ TRÌNH AI*\n\n👤 *Khách hàng:* ${contactInfo.name}\n📞 *Số điện thoại:* ${contactInfo.phone}\n🎓 *Khóa học:* ${course.title}\n\n🎯 *Mục tiêu:* ${purpose}\n📦 *Sản phẩm:* ${products}\n⚡ *Cường độ:* ${intensity === 'fast' ? 'Cấp tốc' : 'Bình thường'}\n\n💡 *Lý do AI đề xuất:*\n_${aiPlan.reasoning}_\n\n📚 *LỘ TRÌNH CHI TIẾT:*\n${syllabusText}`;
+
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      if (response.ok) {
+        setSendSuccess(true);
+        setTimeout(() => {
+          setIsModalOpen(false);
+          setSendSuccess(false);
+        }, 3000);
+      } else {
+        alert("Có lỗi khi gửi tin nhắn. Vui lòng kiểm tra BOT_TOKEN và CHAT_ID.");
+      }
+    } catch (error) {
+      console.error("Telegram error:", error);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -162,49 +214,8 @@ const CourseDetailPage: React.FC = () => {
                  className="w-full h-full object-cover"
                />
             </div>
-            <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-[2.5rem] shadow-2xl border border-slate-100 hidden md:block animate-float">
-               <div className="flex items-center space-x-4">
-                  <div className="bg-indigo-100 p-4 rounded-2xl">
-                    <Sparkles className="text-indigo-600 w-8 h-8" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-black text-slate-900 leading-none">Cam kết</p>
-                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-1">1 kèm 1 thực chiến</p>
-                  </div>
-               </div>
-            </div>
           </div>
         </div>
-
-        {/* Full Curriculum Section */}
-        <section className="mb-32">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-indigo-600 font-black text-sm uppercase tracking-widest">Lộ trình học A - Z</h2>
-            <p className="text-3xl md:text-5xl font-black text-slate-900 uppercase">Hành trình làm chủ công cụ</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {course.curriculum?.map((item, idx) => (
-              <div key={idx} className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 hover:bg-white hover:shadow-xl hover:border-indigo-100 transition-all group">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="bg-indigo-100 text-indigo-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
-                    {item.session}
-                  </span>
-                  <Calendar size={18} className="text-slate-300" />
-                </div>
-                <h3 className="text-xl font-black text-slate-900 mb-4 group-hover:text-indigo-600 transition-colors">{item.title}</h3>
-                <div className="space-y-2">
-                  {item.topics.map((topic, i) => (
-                    <div key={i} className="flex items-center space-x-2 text-slate-500">
-                      <ChevronRight size={14} className="text-indigo-400 shrink-0" />
-                      <span className="text-sm font-medium">{topic}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* AI Customizer Section */}
         <section className="bg-slate-900 rounded-[3rem] p-10 md:p-20 text-white relative overflow-hidden mb-32">
@@ -218,31 +229,31 @@ const CourseDetailPage: React.FC = () => {
               </div>
               <h2 className="text-3xl md:text-5xl font-black uppercase leading-tight">Cá nhân hóa <br/><span className="text-indigo-500">nội dung học</span></h2>
               <p className="text-slate-400 text-lg font-medium leading-relaxed">
-                Bạn có mục tiêu cụ thể? Hãy để AI của Hudesign thiết kế lại nội dung của {course.curriculum?.length || 5} buổi học này sao cho tập trung 100% vào nhu cầu của bạn.
+                Nhu cầu của bạn là duy nhất. Hãy để AI thiết kế lại lộ trình tập trung 100% vào mục tiêu của bạn.
               </p>
 
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2 font-heading">
                     <Target size={14} /> Mục đích học của bạn?
                   </label>
                   <input 
                     type="text" 
                     value={purpose}
                     onChange={(e) => setPurpose(e.target.value)}
-                    placeholder="VD: Để tự thiết kế banner Facebook, học nhanh để đi làm..." 
+                    placeholder="VD: tự xây dựng fanpage của mình" 
                     className="w-full bg-white/5 border border-white/10 px-6 py-4 rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-white" 
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2 font-heading">
                     <Package size={14} /> Sản phẩm bạn muốn làm được?
                   </label>
                   <input 
                     type="text" 
                     value={products}
                     onChange={(e) => setProducts(e.target.value)}
-                    placeholder="VD: Poster sự kiện, Album ảnh cưới, Video Reels TikTok..." 
+                    placeholder="VD: ảnh post facebook, quảng cáo sản phẩm" 
                     className="w-full bg-white/5 border border-white/10 px-6 py-4 rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium text-white" 
                   />
                 </div>
@@ -268,43 +279,21 @@ const CourseDetailPage: React.FC = () => {
             </div>
 
             <div className="lg:col-span-7 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 md:p-12 min-h-[400px] relative">
-              {!aiPlan && !loading && (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-40 py-20">
-                   <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center">
-                      <Sparkles size={40} className="text-slate-700" />
-                   </div>
-                   <p className="text-slate-500 font-black uppercase tracking-widest text-sm">Kết quả nội dung AI <br/>sẽ hiển thị tại đây</p>
-                </div>
-              )}
-
               {loading && (
                 <div className="h-full flex flex-col items-center justify-center py-20 space-y-6 animate-pulse">
                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                   <p className="text-indigo-400 font-black text-sm uppercase tracking-widest">Đang phân tích nhu cầu của bạn...</p>
+                   <p className="text-indigo-400 font-black text-sm uppercase tracking-widest">Đang xây dựng lộ trình...</p>
                 </div>
               )}
 
               {aiPlan && !loading && (
                 <div className="space-y-10 animate-in fade-in zoom-in duration-500">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/10 pb-8">
-                     <div className="space-y-1">
-                        <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Nội dung cá nhân hóa</p>
-                        <h3 className="text-2xl font-black uppercase">DÀNH RIÊNG CHO BẠN</h3>
-                     </div>
-                     <div className="flex gap-4">
-                        <div className="bg-indigo-600/20 border border-indigo-500/30 px-6 py-3 rounded-2xl text-center">
-                           <p className="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-1">Thời lượng</p>
-                           <p className="text-xl font-black">{aiPlan.estimatedSessions} buổi</p>
-                        </div>
-                     </div>
-                  </div>
-
                   <div className="bg-indigo-600/10 p-6 rounded-3xl border border-indigo-500/20 flex gap-4 items-start">
                      <Info size={20} className="text-indigo-400 shrink-0 mt-1" />
-                     <p className="text-sm font-medium text-slate-300 leading-relaxed italic">"{aiPlan.reasoning}"</p>
+                     <p className="text-sm font-medium text-slate-300 leading-relaxed italic font-heading">"{aiPlan.reasoning}"</p>
                   </div>
 
-                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-4 no-scrollbar">
+                  <div className="space-y-4 max-h-[450px] overflow-y-auto pr-4 no-scrollbar">
                      {aiPlan.syllabus.map((s, i) => (
                        <div key={i} className="bg-white/5 p-6 rounded-3xl border border-white/5 hover:border-indigo-500/30 transition-all flex gap-6 items-start">
                           <div className="bg-indigo-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 font-black text-xs shadow-lg">
@@ -323,42 +312,94 @@ const CourseDetailPage: React.FC = () => {
                   </div>
 
                   <div className="pt-6">
-                    <Link 
-                      to={`/register?course=${course.id}`}
+                    <button 
+                      onClick={() => setIsModalOpen(true)}
                       className="w-full bg-white text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-indigo-50 transition-all active:scale-95 text-center"
                     >
                       <MessageSquare size={18} />
                       <span>Xác nhận nội dung & Đăng ký ngay</span>
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
             </div>
           </div>
         </section>
+      </div>
 
-        {/* FAQ / Info */}
-        <section className="max-w-4xl mx-auto mb-32">
-          <div className="bg-slate-50 rounded-[2.5rem] p-10 md:p-16 border border-slate-100 space-y-10">
-            <h3 className="text-2xl font-black text-slate-900 uppercase">Hỏi đáp nhanh</h3>
-            <div className="space-y-8">
-              {[
-                { q: "Học phí đã bao gồm tài nguyên chưa?", a: "Toàn bộ học phí đã bao gồm các bộ Template, Ebook và tài liệu thực hành độc quyền của Hudesign." },
-                { q: "Tôi có được hỗ trợ sau khóa học không?", a: "Chắc chắn rồi. Bạn sẽ được tham gia nhóm học viên để hỏi đáp và nhận hỗ trợ trực tiếp từ Hủ mãi mãi." },
-                { q: "Có được chia sẻ dự án để thực hành sau khoá học không?", a: "Chúng mình sẽ chia sẻ những tài nguyên mới, những dự án thực chiến để học viên cùng thực hành và tăng thu nhập." }
-              ].map((item, i) => (
-                <div key={i} className="space-y-2">
-                  <p className="font-black text-slate-900 flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full"></div>
-                    {item.q}
-                  </p>
-                  <p className="text-slate-500 text-sm font-medium leading-relaxed pl-3.5">{item.a}</p>
+      {/* MODAL XÁC NHẬN THÔNG TIN */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in" onClick={() => setIsModalOpen(false)}></div>
+          <div className="relative bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+            <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors">
+              <X size={20} />
+            </button>
+            
+            <div className="p-8 md:p-10 space-y-8">
+              {sendSuccess ? (
+                <div className="text-center py-10 space-y-6 animate-in zoom-in">
+                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                    <CheckCircle size={40} className="text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black text-slate-900">Yêu cầu đã gửi!</h2>
+                    <p className="text-slate-500 mt-2 font-medium">Hủ sẽ liên hệ lại qua Zalo để tư vấn lộ trình này cho bạn nhé.</p>
+                  </div>
                 </div>
-              ))}
+              ) : (
+                <>
+                  <div className="text-center">
+                    <h2 className="text-2xl font-black text-slate-900">Xác nhận thông tin</h2>
+                    <p className="text-slate-500 text-sm mt-2 font-medium">Hủ sẽ gửi lộ trình cá nhân hóa này <br/> qua Zalo để chúng ta cùng bắt đầu.</p>
+                  </div>
+
+                  <form onSubmit={handleConsultation} className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 font-heading">Họ tên của bạn</label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                        <input 
+                          required 
+                          type="text" 
+                          value={contactInfo.name}
+                          onChange={(e) => setContactInfo({...contactInfo, name: e.target.value})}
+                          placeholder="Nguyễn Văn A" 
+                          className="w-full pl-12 pr-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-bold text-sm transition-all" 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 font-heading">Số điện thoại Zalo</label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                        <input 
+                          required 
+                          type="tel" 
+                          value={contactInfo.phone}
+                          onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
+                          placeholder="09xxx..." 
+                          className="w-full pl-12 pr-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-bold text-sm transition-all" 
+                        />
+                      </div>
+                    </div>
+
+                    <button 
+                      disabled={isSending}
+                      type="submit" 
+                      className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-3 shadow-xl hover:bg-indigo-700 transition-all active:scale-95 disabled:opacity-50"
+                    >
+                      {isSending ? <Loader2 className="animate-spin" size={20} /> : <MessageSquare size={18} />}
+                      <span>Tư vấn lộ trình này</span>
+                    </button>
+                  </form>
+                </>
+              )}
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

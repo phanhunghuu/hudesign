@@ -1,12 +1,101 @@
 
 import React from 'react';
 import { Palette, Camera, Laptop, Sparkles, Video, Settings2 } from 'lucide-react';
-import { Course, Product } from './types';
+import { Course, Product, CustomerProject } from './types';
 
 // Helper to optimize unsplash images
 const opt = (url: string) => url.includes('unsplash.com') ? `${url}&w=800&q=75&auto=format` : url;
 
+/**
+ * ============================================================
+ * NƠI SỬA ẢNH DỰ ÁN (PORTFOLIO)
+ * ============================================================
+ * Bạn chỉ cần thay thế các link ảnh trong mảng 'images' bên dưới.
+ * Khuyên dùng: Upload ảnh lên Cloudinary hoặc ImgBB rồi dán link vào đây.
+ */
+export const PORTFOLIO_PROJECTS: CustomerProject[] = [
+  {
+    id: 'p0',
+    brandName: 'Bánh ướt Cây Me',
+    category: 'F&B Branding & Social',
+    year: '2025-2026',
+    images: [
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747065/cac7b73b-8a72-4c29-afc3-23289fe611f2.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767746833/586649384_1471756938292937_363968141553149955_n_ejikvu.jpg',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767746833/600405375_1496609115807719_1938025937198231248_n_xi4rqq.jpg',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767746833/533646355_1378294757639156_3128667634612435430_n_zluyw1.jpg',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767746833/603927086_1500515078750456_7571103097737398428_n_sn6iav.jpg',
+    ]
+  },
+  {
+    id: 'p1',
+    brandName: 'Barbershop Gia Lai',
+    category: 'Social Media Design',
+    year: '2024',
+    images: [
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747552/c47f639d-f2aa-4a91-808e-bf86169deed3.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747542/HUDESIGN_S_PORTFOLIO-1_suufyh.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747544/HUDESIGN_S_PORTFOLIO_2_gpupmv.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747543/HUDESIGN_S_PORTFOLIO_1.png4_p7wehb.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747544/HUDESIGN_S_PORTFOLIO.png5_v7ekwi.png',
+    ]
+  },
+  {
+    id: 'p2',
+    brandName: 'Gia Hảo - F&B',
+    category: 'F&B Branding',
+    year: '2024',
+    images: [
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747775/839b3b16-4e88-403c-89dc-d14aaf9068e8.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767748009/giahao2_yppfai.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767748008/giahao1_og4b5s.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767748007/giahao6_fa9mbw.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767747979/giahao3_cajhzn.png',
+    ]
+  },
+  {
+    id: 'p3',
+    brandName: 'Fschool - THPT FPT Cần Thơ',
+    category: 'Marketing Poster',
+    year: '2023',
+    images: [
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767750124/33f34a1b-1c5a-42e1-af27-6669bad4719e.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767750525/fpt4_nzeun2.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767750524/fpt3_pys6pn.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767750522/fpt5_etw9zy.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767750522/fpt1_uomyas.png',
+    ]
+  },
+  {
+    id: 'p4',
+    brandName: 'Citiship.vn - Shipper Cần Thơ',
+    category: 'Branding Design',
+    year: '2018-2023',
+    images: [
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767751290/a2989fda-5547-4793-b6e6-44d99075c536.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767751608/58863f08-e8b9-4d46-9141-cd716896b283.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767751556/c864699d-7d84-458e-8b5b-e801a10e0ccc.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767751419/33ca1150-de5c-4d86-9a63-2891b8283da5.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767751412/72bf2128-3980-45f1-8e6b-c3ec09d4e3f8.png',
+    ]
+  },
+  {
+    id: 'p5',
+    brandName: 'Yenny Jewelry',
+    category: 'Branding Design',
+    year: '2022',
+    images: [
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/v1767751902/yenny1_iyik2u.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/v1767751966/yenny2_bpxy8n.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/v1767751862/yenny3_nhjrjk.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/v1767751863/yenny4_nuqzhn.png',
+      'https://res.cloudinary.com/dcwgy4tnb/image/upload/v1767751887/yenny5_dbxp7w.png',
+    ]
+  }
+];
+
 export const COURSES: Course[] = [
+  // ... existing courses ...
   {
     id: 'custom-path',
     title: 'Build Your Own Path - Khóa học Tự chọn',
@@ -36,7 +125,6 @@ export const COURSES: Course[] = [
     originalPrice: '2.890.000 VNĐ',
     discountPrice: '1.990.000 VNĐ',
     type: 'OFFLINE',
-    // ĐÃ ĐỔI HÌNH TẠI ĐÂY (Vibe lớp học/workshop)
     image: 'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767362810/minh-hoa-canva-3_qk3iec.png',
     isHot: true,
     perks: [

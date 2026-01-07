@@ -31,14 +31,6 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const scrollToSection = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="relative min-h-[90vh] md:min-h-screen bg-gradient-hudesign flex items-center pt-16 md:pt-20 overflow-hidden">
       <div className="absolute top-1/4 -right-20 w-64 h-64 md:w-96 md:h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
@@ -50,11 +42,11 @@ const Hero: React.FC = () => {
             <span className="text-indigo-400 font-bold text-[10px] uppercase tracking-widest">Đào tạo 1 kèm 1 thực chiến</span>
           </div>
           
-          <h1 className="text-3xl md:text-6xl font-black text-white leading-[1.2] md:leading-tight">
+          <h1 className="text-4xl md:text-7xl font-black text-white leading-[1.1] md:leading-tight">
             Thiết kế đồ họa cơ bản cho <span className="text-indigo-400">Marketers</span>
           </h1>
           
-          <p className="text-sm md:text-lg text-slate-300 max-w-md mx-auto md:mx-0 leading-relaxed">
+          <p className="text-sm md:text-lg text-slate-300 max-w-md mx-auto md:mx-0 leading-relaxed font-medium">
             Làm chủ Photoshop, Illustrator và Canva để tự tay tạo ra các ấn phẩm quảng cáo thu hút khách hàng.
           </p>
 
@@ -75,7 +67,7 @@ const Hero: React.FC = () => {
             </Link>
             <Link 
               to="/courses"
-              className="bg-white/10 backdrop-blur-md text-white border border-white/20 font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all text-sm md:text-base text-center"
+              className="bg-white/10 backdrop-blur-md text-white border border-white/20 font-black px-8 py-4 rounded-xl hover:bg-white/20 transition-all text-sm md:text-base text-center"
             >
               Xem các khóa học
             </Link>
@@ -91,7 +83,7 @@ const Hero: React.FC = () => {
                 <Sparkles className="text-green-600 w-4 h-4 md:w-6 md:h-6" />
               </div>
               <div className="pr-1 text-left">
-                <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase leading-none mb-1 tracking-tighter">Cam kết</p>
+                <p className="text-[8px] md:text-[10px] text-slate-500 font-bold uppercase leading-none mb-1 tracking-tighter">Cam kết</p>
                 <p className="text-[10px] md:text-sm font-black text-slate-900 whitespace-nowrap">Kèm 1-1 tận tâm</p>
               </div>
             </div>
@@ -110,7 +102,7 @@ const Hero: React.FC = () => {
                     className="w-full h-full object-cover rounded-[1.5rem]"
                   />
                   <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-2 py-1 rounded-md border border-white/10 z-10">
-                    <p className="text-white text-[8px] font-bold uppercase tracking-widest">{slide.title}</p>
+                    <p className="text-white text-[8px] font-black uppercase tracking-widest">{slide.title}</p>
                   </div>
                 </div>
               ))}

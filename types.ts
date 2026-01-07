@@ -16,7 +16,7 @@ export interface Course {
   discountPrice: string;
   perks: string[];
   type: 'OFFLINE' | 'ONLINE';
-  image: string; // Thêm trường này
+  image: string;
   curriculum?: CurriculumItem[];
   isSpecial?: boolean;
   isHot?: boolean;
@@ -31,6 +31,14 @@ export interface Product {
   description: string;
   features: string[];
   reviewImages?: string[];
+}
+
+export interface CustomerProject {
+  id: string;
+  brandName: string;
+  category: string;
+  year: string;
+  images: string[];
 }
 
 export interface FormData {

@@ -8,9 +8,10 @@ import {
 } from 'lucide-react';
 import { COURSES } from '../constants';
 
-// === THAY LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY ===
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby04wYoQIDiUsavGiOEqLVjKyldFtTkPNHRzeiyzBWomFsoowHkpDjSoJDqXwWCXapF/exec";
-// =================================================
+// === THÔNG TIN TELEGRAM CỦA BẠN ===
+const TELEGRAM_BOT_TOKEN = "7496763782:AAFOYZzRsBNgCLpdDlJWXMUBwmKwtzCXQBI"; 
+const TELEGRAM_CHAT_ID = "308222651"; 
+// ===================================================
 
 const RegistrationPage: React.FC = () => {
   const location = useLocation();
@@ -32,20 +33,56 @@ const RegistrationPage: React.FC = () => {
     setStatus('submitting');
     
     const formData = new FormData(formRef.current);
-    formData.append('learningStyle', learningStyle);
-    formData.append('paymentMethod', paymentMethod);
-    formData.append('mode', mode);
+    const data = {
+      name: formData.get('name'),
+      phone: formData.get('phone'),
+      email: formData.get('email'),
+      course: formData.get('course'),
+      schedule: formData.get('schedule'),
+      sessions: formData.get('sessionsPerWeek'),
+      message: formData.get('message') || 'Không có'
+    };
+
+    // Tạo nội dung tin nhắn gửi về Telegram
+    const telegramMessage = `
+🔥 *ĐĂNG KÝ KHÓA HỌC MỚI* 🔥
+
+👤 *Học viên:* ${data.name}
+📞 *SĐT/Zalo:* ${data.phone}
+📧 *Email:* ${data.email}
+
+🎓 *Khóa học:* ${data.course}
+📍 *Hình thức:* ${mode === 'offline' ? 'Học Offline' : 'Học Online'}
+📚 *Phong cách:* ${learningStyle}
+
+📅 *Lịch rảnh:* ${data.schedule}
+⏱️ *Số buổi/tuần:* ${data.sessions}
+💳 *Thanh toán:* ${paymentMethod}
+
+💬 *Lời nhắn:* _${data.message}_
+---
+📅 *Ngày đăng ký:* ${new Date().toLocaleString('vi-VN')}
+    `;
 
     try {
-      await fetch(SCRIPT_URL, {
+      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
-        body: formData,
-        mode: 'no-cors'
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: telegramMessage,
+          parse_mode: 'Markdown'
+        })
       });
-      setStatus('success');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (response.ok) {
+        setStatus('success');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error("Telegram API Error");
+      }
     } catch (error) {
-      console.error("Lỗi gửi form:", error);
+      console.error("Lỗi gửi Telegram:", error);
       setStatus('error');
       setTimeout(() => setStatus('idle'), 4000);
     }
@@ -116,17 +153,23 @@ const RegistrationPage: React.FC = () => {
                 </div>
                 <div className="space-y-3">
                   <h2 className="text-3xl font-black text-slate-900">ĐĂNG KÝ THÀNH CÔNG!</h2>
-                  <p className="text-slate-500 font-medium">Cảm ơn bạn đã tin tưởng Hudesign. Chúng mình sẽ liên hệ với bạn qua Zalo/Số điện thoại sớm nhất có thể.</p>
+                  <p className="text-slate-500 font-medium">Hủ đã nhận được thông tin. Mình sẽ nhắn tin cho bạn qua Zalo ngay nhé!</p>
                 </div>
                 <button 
-                  onClick={() => navigate('/courses')}
+                  onClick={() => navigate('/')}
                   className="bg-indigo-600 text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl"
                 >
-                  Khám phá thêm khóa học
+                  Quay lại Trang chủ
                 </button>
               </div>
             ) : (
               <form ref={formRef} onSubmit={handleSubmit} className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl border border-slate-100 space-y-10">
+                {status === 'error' && (
+                  <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm font-bold animate-pulse text-center">
+                    Có lỗi xảy ra khi gửi đăng ký. Vui lòng nhắn tin Zalo trực tiếp cho Hủ!
+                  </div>
+                )}
+                
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
                     <User className="text-indigo-600" size={20} />
