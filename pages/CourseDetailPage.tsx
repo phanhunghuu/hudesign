@@ -4,8 +4,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
 import { 
   ArrowLeft, CheckCircle, Clock, Sparkles, Send, Loader2, 
-  Calendar, Zap, ChevronRight, MessageSquare, Flame, 
-  Target, Package, RefreshCcw, Info, X, Phone, User
+  BookOpen, RefreshCcw, MessageSquare, Flame, 
+  Target, Package, Info, X, Phone, User
 } from 'lucide-react';
 import { COURSES } from '../constants';
 import { AICustomPlan, Course } from '../types';
@@ -146,79 +146,146 @@ const CourseDetailPage: React.FC = () => {
     <div className="pt-24 md:pt-32 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb & Navigation */}
-        <Link to="/courses" className="inline-flex items-center space-x-2 text-slate-500 hover:text-indigo-600 font-bold text-sm mb-8 transition-colors group">
+        <Link to="/courses" className="inline-flex items-center space-x-2 text-slate-500 hover:text-indigo-600 font-bold text-sm mb-6 transition-colors group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span>Quay lại danh sách khóa học</span>
         </Link>
 
-        {/* Hero Section */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <span className="bg-indigo-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">
+        {/* Hero Section - UPDATED LAYOUT */}
+        <div className="space-y-8 md:space-y-12 mb-20 md:mb-24">
+          
+          {/* 1. Banner Image Top (2:1 Ratio) */}
+          <div className="relative w-full aspect-[2/1] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl bg-slate-100 border border-slate-100 group">
+             <img 
+               src={course.image} 
+               alt={course.title} 
+               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-60"></div>
+
+             {/* Tags overlay on banner */}
+             <div className="absolute top-4 left-4 md:top-8 md:left-8 flex flex-col gap-3 items-start">
+                <span className={`text-[10px] md:text-xs font-black px-4 py-2 rounded-xl uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/20 ${course.type === 'ONLINE' ? 'bg-green-500/90 text-white' : 'bg-white/90 text-indigo-700'}`}>
                   {course.type}
                 </span>
                 {course.isHot && (
-                  <span className="bg-red-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1">
-                    <Flame size={12} fill="currentColor" /> HOT
+                  <span className="bg-red-600/90 text-white text-[10px] md:text-xs font-black px-4 py-2 rounded-xl uppercase tracking-widest shadow-lg backdrop-blur-md border border-white/20 flex items-center gap-1.5">
+                    <Flame size={14} fill="currentColor" /> HOT
                   </span>
                 )}
-              </div>
-              <h1 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight">
-                {course.title}
-              </h1>
-              <p className="text-slate-500 text-lg md:text-xl font-medium leading-relaxed max-w-xl">
-                {course.content}
-              </p>
-            </div>
-
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-baseline space-x-3">
-                <span className="text-sm font-bold text-slate-400 line-through decoration-red-500/50">{course.originalPrice}</span>
-                <span className="text-3xl md:text-5xl font-black text-indigo-600 tracking-tight">{course.discountPrice}</span>
-              </div>
-              <div className="flex gap-4">
-                <div className="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100 flex items-center space-x-2">
-                  <Clock className="text-indigo-600" size={16} />
-                  <span className="text-xs font-black text-slate-700 uppercase tracking-widest">{course.duration}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-4">
-              {course.perks.map((perk, i) => (
-                <div key={i} className="flex items-start space-x-3 group">
-                  <div className="mt-1 bg-green-100 p-1 rounded-full shrink-0 group-hover:scale-110 transition-transform">
-                    <CheckCircle size={14} className="text-green-600" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-600">{perk}</span>
-                </div>
-              ))}
-            </div>
-
-            <Link 
-              to={`/register?course=${course.id}`}
-              className="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black text-lg shadow-2xl hover:bg-indigo-600 transition-all active:scale-95 flex items-center justify-center space-x-3 w-full sm:w-auto text-center"
-            >
-              <span>Đăng ký giữ chỗ ngay</span>
-              <Send size={20} />
-            </Link>
+             </div>
           </div>
 
-          <div className="relative">
-            <div className="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl bg-slate-100">
-               <img 
-                 src={course.image} 
-                 alt={course.title}
-                 className="w-full h-full object-cover"
-               />
+          {/* 2. Info Grid */}
+          <div className="grid lg:grid-cols-12 gap-8 md:gap-12">
+            
+            {/* Left Column: Title & Content */}
+            <div className="lg:col-span-8 space-y-8">
+               <div className="space-y-4">
+                 <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight">
+                  {course.title}
+                 </h1>
+                 <p className="text-slate-500 text-base md:text-xl font-medium leading-relaxed">
+                  {course.content}
+                 </p>
+               </div>
+
+               <div className="grid sm:grid-cols-2 gap-4 pt-2">
+                {course.perks.map((perk, i) => (
+                  <div key={i} className="flex items-start space-x-3 group p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-100 transition-colors">
+                    <div className="mt-0.5 bg-green-100 p-1.5 rounded-full shrink-0 group-hover:scale-110 transition-transform">
+                      <CheckCircle size={16} className="text-green-600" />
+                    </div>
+                    <span className="text-sm font-bold text-slate-600 leading-snug">{perk}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Right Column: Pricing & Action Card */}
+            <div className="lg:col-span-4">
+               <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 space-y-6 sticky top-28">
+                  <div>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Học phí ưu đãi</p>
+                    <div className="flex flex-wrap items-baseline gap-3">
+                       <span className="text-4xl font-black text-indigo-600 tracking-tight">{course.discountPrice}</span>
+                       <span className="text-sm font-bold text-slate-400 line-through decoration-slate-300">{course.originalPrice}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-slate-600 font-bold text-sm bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                     <Clock className="text-indigo-600 shrink-0" size={20} />
+                     <span>Thời lượng: {course.duration}</span>
+                  </div>
+
+                  <Link 
+                    to={`/register?course=${course.id}`}
+                    className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-base shadow-xl hover:bg-indigo-600 transition-all active:scale-95 flex items-center justify-center space-x-3 group"
+                  >
+                    <span>Đăng ký giữ chỗ</span>
+                    <Send size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  
+                  <p className="text-center text-[10px] text-slate-400 font-medium">
+                    Cam kết hoàn tiền nếu không hài lòng sau buổi học đầu tiên.
+                  </p>
+               </div>
+            </div>
+
           </div>
         </div>
 
+        {/* Standard Curriculum Section */}
+        {course.curriculum && (
+          <section className="mb-32">
+            <div className="text-center mb-12 space-y-4">
+              <div className="inline-flex items-center space-x-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full border border-indigo-100 shadow-sm">
+                <BookOpen size={16} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Nội dung chi tiết</span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900">Lộ trình học tập</h2>
+              <p className="text-slate-500 text-lg font-medium max-w-2xl mx-auto">
+                Nội dung được thiết kế bài bản để bạn làm chủ kỹ năng từ cơ bản đến nâng cao.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6 relative">
+              {/* Decorative line for desktop */}
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-slate-100 -translate-x-1/2"></div>
+
+              {course.curriculum.map((item, index) => (
+                <div key={index} className={`flex ${index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'} relative`}>
+                  {/* Dot on timeline */}
+                  <div className="hidden md:block absolute top-8 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-white bg-indigo-600 shadow-md z-10"></div>
+                  
+                  <div className={`w-full md:w-[calc(50%-2rem)] bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-lg hover:shadow-xl transition-all group ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                    <div className={`flex flex-col gap-2 mb-4 ${index % 2 === 0 ? 'md:items-end' : 'md:items-start'}`}>
+                      <span className="inline-block bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                        {item.session}
+                      </span>
+                      <h3 className="text-xl font-black text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">
+                        {item.title}
+                      </h3>
+                    </div>
+                    
+                    <ul className={`space-y-2 ${index % 2 === 0 ? 'flex flex-col md:items-end' : ''}`}>
+                      {item.topics.map((topic, i) => (
+                        <li key={i} className={`flex items-center gap-2 text-slate-600 font-medium text-sm ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                          <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full shrink-0"></div>
+                          <span>{topic}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* AI Customizer Section */}
         <section className="bg-slate-900 rounded-[3rem] p-10 md:p-20 text-white relative overflow-hidden mb-32">
+          {/* ... AI Section Content ... */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
           
           <div className="relative z-10 grid lg:grid-cols-12 gap-16 items-start">

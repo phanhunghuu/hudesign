@@ -10,6 +10,10 @@
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767743704/logo-hu_g8syiw.png" />
     <link rel="apple-touch-icon" href="https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767743704/logo-hu_g8syiw.png" />
     
+    <!-- Tối ưu kết nối tới Server Ảnh -->
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +32,7 @@
         font-weight: var(--font-weight-body);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        line-height: 1.5;
       }
 
       /* Chỉnh độ đậm cho TOÀN BỘ tiêu đề */
@@ -35,6 +40,7 @@
         font-family: 'Bricolage Grotesque', sans-serif;
         font-weight: var(--font-weight-headings);
         letter-spacing: -0.02em;
+        line-height: 1.25 !important; /* Tăng nhẹ để không bị mất dấu tiếng Việt */
       }
 
       .bg-gradient-hudesign { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }

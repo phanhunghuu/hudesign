@@ -1,18 +1,11 @@
 
 import React from 'react';
 import { Palette, Camera, Laptop, Sparkles, Video, Settings2 } from 'lucide-react';
-import { Course, Product, CustomerProject } from './types';
+import { Course, CustomerProject } from './types';
 
-// Helper to optimize unsplash images
+// Helper to optimize images
 const opt = (url: string) => url.includes('unsplash.com') ? `${url}&w=800&q=75&auto=format` : url;
 
-/**
- * ============================================================
- * NƠI SỬA ẢNH DỰ ÁN (PORTFOLIO)
- * ============================================================
- * Bạn chỉ cần thay thế các link ảnh trong mảng 'images' bên dưới.
- * Khuyên dùng: Upload ảnh lên Cloudinary hoặc ImgBB rồi dán link vào đây.
- */
 export const PORTFOLIO_PROJECTS: CustomerProject[] = [
   {
     id: 'p0',
@@ -95,7 +88,6 @@ export const PORTFOLIO_PROJECTS: CustomerProject[] = [
 ];
 
 export const COURSES: Course[] = [
-  // ... existing courses ...
   {
     id: 'custom-path',
     title: 'Build Your Own Path - Khóa học Tự chọn',
@@ -120,274 +112,97 @@ export const COURSES: Course[] = [
     title: 'Khóa Canva Cơ Bản Cho Marketing',
     description: 'Sử dụng Canva để thiết kế nhanh chóng, hiệu quả.',
     content: 'Giải pháp thiết kế "mì ăn liền" chuyên nghiệp cho người không rành kỹ thuật.',
-    duration: '4 – 5 buổi (tối thiểu 2h/buổi)',
-    suitableFor: ['Content Creator', 'Marketer cần tốc độ', 'Máy tính cấu hình yếu'],
+    duration: '4 – 5 buổi',
+    suitableFor: ['Content Creator', 'Marketer cần tốc độ'],
     originalPrice: '2.890.000 VNĐ',
     discountPrice: '1.990.000 VNĐ',
     type: 'OFFLINE',
     image: 'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767362810/minh-hoa-canva-3_qk3iec.png',
     isHot: true,
     perks: [
-      'Tiết kiệm 900.000 VNĐ khi đăng ký ngay.',
-      'Lịch học linh động theo thời gian rảnh.',
-      'Hỗ trợ kèm 1 – 1 tận tình.',
-      'Nội dung: Giáo trình "cá nhân hóa".',
-      'Thực hành: Bài tập theo nhu cầu thực tế.'
+      'Tặng tài khoản Canva Pro.',
+      'Lịch học linh động.',
+      'Thực hành theo dự án của bạn.'
     ],
     curriculum: [
-      { session: 'Buổi 1', title: 'Tổng quan Canva & Tư duy thiết kế nhanh', topics: ['Giao diện Canva Pro', 'Hệ thống Element & Template', 'Tư duy bố cục kéo thả'] },
-      { session: 'Buổi 2', title: 'Thiết kế hình ảnh Online Marketing', topics: ['Thiết kế Post Facebook/Instagram', 'Tạo Story thu hút', 'Sử dụng AI trong Canva'] },
-      { session: 'Buổi 3', title: 'Xây dựng Brand Identity đơn giản', topics: ['Chọn bảng màu thương hiệu', 'Kết hợp Font chữ', 'Thiết kế Logo/Namecard nhanh'] },
-      { session: 'Buổi 4', title: 'Thiết kế Video & Trình chiếu', topics: ['Tạo video ngắn từ Template', 'Thiết kế Slide thuyết trình', 'Hiệu ứng chuyển động (Animate)'] },
-      { session: 'Buổi 5', title: 'Quản lý dự án & Xuất bản', topics: ['Chia sẻ team/client', 'Tối ưu chuẩn in ấn', 'Đóng gói bộ Branding Kit'] }
+      { session: 'Buổi 1', title: 'Tổng quan Canva & Tư duy thiết kế nhanh', topics: ['Giao diện Canva Pro', 'Hệ thống Element', 'Tư duy bố cục'] },
+      { session: 'Buổi 2', title: 'Thiết kế hình ảnh Marketing', topics: ['Post Facebook', 'Story thu hút', 'AI trong Canva'] },
+      { session: 'Buổi 3-5', title: 'Video & Quản lý Branding', topics: ['Edit Video ngắn', 'Thiết kế Slide', 'Đóng gói Brand Kit'] }
     ]
   },
   {
     id: 'marketing-offline',
-    title: 'Khóa Thiết kế Đồ họa Marketing (OFFLINE)',
-    description: 'Học 2 phần mềm chuyên nghiệp Photoshop (Ps) & Illustrator (Ai).',
-    content: 'Đào tạo bài bản từ tư duy thẩm mỹ đến công cụ thiết kế chuyên nghiệp.',
-    duration: '8 – 10 buổi (tối thiểu 2h/buổi)',
-    suitableFor: ['Người làm Marketing', 'Chủ shop online', 'Sinh viên'],
-    originalPrice: '6.390.000 VNĐ',
-    discountPrice: '5.490.000 VNĐ',
+    title: 'Thiết Kế Đồ Họa 2D (Ps + Ai)',
+    description: 'Làm chủ bộ đôi Photoshop và Illustrator để cân mọi dự án thiết kế.',
+    content: 'Từ tư duy bố cục, phối màu đến kỹ thuật xử lý ảnh chuyên sâu và vẽ vector.',
+    duration: '10 – 12 buổi',
+    suitableFor: ['Người mới bắt đầu', 'Marketers', 'Sinh viên'],
+    originalPrice: '5.500.000 VNĐ',
+    discountPrice: '4.500.000 VNĐ',
     type: 'OFFLINE',
-    image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=800',
+    image: opt('https://images.unsplash.com/photo-1561070791-2526d30994b5?'),
     perks: [
-      'Lịch học linh động theo lịch rảnh của học viên.',
-      'Hỗ trợ kèm 1 – 1 tận tình.',
-      'Giáo trình "cá nhân hóa" cho học viên.',
-      'Bài tập thực hành theo nhu cầu của học viên.',
-      'Đồng hành hỗ trợ học viên sau khóa học.'
+      'Học trọn bộ Ps và Ai thực chiến.',
+      'Kèm 1-1 trực tiếp tại Cần Thơ.',
+      'Hỗ trợ cài đặt phần mềm miễn phí.',
+      'Cấp chứng nhận hoàn thành từ Hudesign.'
     ],
     curriculum: [
-      { session: 'Buổi 1', title: 'Tư duy thiết kế & Làm quen Photoshop', topics: ['Bố cục trong Marketing', 'Màu sắc và Font chữ', 'Giao diện và công cụ cơ bản PS'] },
-      { session: 'Buổi 2-3', title: 'Xử lý hình ảnh chuyên sâu', topics: ['Cắt ghép vật thể', 'Chỉnh màu sắc sản phẩm', 'Retouch ảnh chân dung cơ bản'] },
-      { session: 'Buổi 4-5', title: 'Thiết kế ấn phẩm quảng cáo', topics: ['Banner Facebook/Ads', 'Poster sự kiện', 'Lồng ghép chữ nghệ thuật (Typography)'] },
-      { session: 'Buổi 6-8', title: 'Làm chủ Illustrator (Ai)', topics: ['Vẽ Vector chuyên nghiệp', 'Thiết kế Logo/Icon', 'Dàn trang Brochure/Menu'] },
-      { session: 'Buổi 9-10', title: 'Project cuối khóa', topics: ['Hoàn thiện bộ nhận diện', 'Xuất file in ấn/digital', 'Đóng gói profile cá nhân'] }
+      { session: 'Buổi 1-3', title: 'Làm chủ Photoshop cơ bản', topics: ['Giao diện & Layer', 'Cắt ghép vật thể', 'Xử lý màu sắc'] },
+      { session: 'Buổi 4-6', title: 'Thiết kế ấn phẩm truyền thông', topics: ['Banner Facebook', 'Poster quảng cáo', 'Retouch ảnh chân dung'] },
+      { session: 'Buổi 7-10', title: 'Thiết kế Vector với Illustrator', topics: ['Vẽ Logo', 'Thiết kế bộ nhận diện', 'Dàn trang in ấn'] }
     ]
   },
   {
     id: 'capcut-pro',
-    title: 'Khóa Edit Video chuyên nghiệp với Capcut (OFFLINE/ONLINE)',
-    description: 'Làm chủ công cụ edit video "quốc dân" trên cả PC và Mobile.',
-    content: 'Khóa học thực chiến giúp bạn tạo ra những video TikTok, Reels triệu view với tư duy kể chuyện hình ảnh hiện đại.',
-    duration: '8 buổi (tối thiểu 2h/buổi)',
-    suitableFor: ['TikToker/YouTuber', 'Chủ doanh nghiệp SME', 'Marketers'],
-    originalPrice: '4.700.000 VNĐ',
-    discountPrice: '3.800.000 VNĐ',
+    title: 'Edit Video Thực Chiến (CapCut PC)',
+    description: 'Biến video thô thành những thước phim triệu view chỉ với CapCut.',
+    content: 'Khóa học tập trung vào kỹ thuật cắt ghép, hiệu ứng, âm thanh và chuyển cảnh chuyên nghiệp.',
+    duration: '6 – 8 buổi',
+    suitableFor: ['Content Creator', 'TikToker', 'Chủ shop'],
+    originalPrice: '3.500.000 VNĐ',
+    discountPrice: '2.500.000 VNĐ',
     type: 'OFFLINE',
-    image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&q=80&w=800',
+    image: opt('https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1768356607/khoa-hoc-video_et1cgd.png'),
     perks: [
-      'Kèm 1-1 trực tiếp trên dự án cá nhân.',
-      'Học tư duy Storytelling (Kể chuyện qua video).',
-      'Tặng kho tài nguyên nhạc, hiệu ứng bản quyền.',
-      'Hỗ trợ cài đặt và sử dụng bản Pro.',
-      'Bí quyết lên xu hướng TikTok/Reels.'
-    ],
-    curriculum: [
-      { session: 'Buổi 1', title: 'Tư duy Video ngắn & Giao diện Capcut', topics: ['Cấu trúc video triệu view', 'Sử dụng Capcut trên PC vs Mobile', 'Quy trình hậu kỳ chuyên nghiệp'] },
-      { session: 'Buổi 2', title: 'Cắt ghép cơ bản & Nhịp điệu (Rhythm)', topics: ['Kỹ thuật cặp (Cut/Split)', 'Tốc độ (Speed Ramp)', 'Chuyển cảnh (Transitions) mượt mà'] },
-      { session: 'Buổi 3', title: 'Text, Phụ đề & Typography Video', topics: ['Tự động tạo phụ đề', 'Thiết kế chữ nghệ thuật', 'Hiệu ứng xuất hiện chữ'] },
-      { session: 'Buổi 4', title: 'Âm thanh & Hiệu ứng (SFX)', topics: ['Mix nhạc nền & Voiceover', 'Sử dụng hiệu ứng âm thanh (SFX)', 'Đồng bộ hình ảnh theo nhịp nhạc'] },
-      { session: 'Buổi 5', title: 'Kỹ xảo nâng cao & Keyframe', topics: ['Làm chủ Keyframe chuyển động', 'Kỹ thuật Masking (Mặt nạ)', 'Sử dụng Overlay sáng tạo'] },
-      { session: 'Buổi 6', title: 'Chỉnh màu (Color Grading)', topics: ['Tư duy màu sắc phim ảnh', 'Sử dụng Filter & Adjustments', 'Xử lý phông xanh (Chroma Key)'] },
-      { session: 'Buổi 7-8', title: 'Project thực chiến & Xuất bản', topics: ['Hoàn thiện video Reels/TikTok', 'Tối ưu chuẩn đăng đa nền tảng', 'Thủ thuật tìm nguồn tài nguyên video'] }
+      'Tặng kho hiệu ứng & nhạc không bản quyền.',
+      'Hướng dẫn xây dựng kịch bản video.',
+      'Tư duy màu sắc và nhịp điệu video.'
     ]
   },
   {
     id: 'marketing-online',
-    title: 'Khóa Thiết kế Đồ họa Marketing (ONLINE)',
-    description: 'Tương tự khóa Offline (Ps & Ai), học trực tuyến qua Zoom/Google Meet.',
-    content: 'Học mọi lúc mọi nơi nhưng vẫn đảm bảo chất lượng tương tác cao nhất.',
-    duration: '8 – 10 buổi (tối thiểu 2h/buổi)',
-    suitableFor: ['Người ở xa', 'Người bận rộn', 'Người muốn học linh động tại nhà'],
-    originalPrice: '5.390.000 VNĐ',
-    discountPrice: '4.490.000 VNĐ',
+    title: 'Thiết kế đồ họa 2D (Học online)',
+    description: 'Dành cho các bạn ở xa muốn học thiết kế để phục vụ công việc Marketing.',
+    content: 'Lớp học trực tuyến tương tác cao, học đến đâu thực hành được ngay đó.',
+    duration: '8 buổi',
+    suitableFor: ['Các bạn ở xa Cần Thơ', 'Người bận rộn'],
+    originalPrice: '4.000.000 VNĐ',
+    discountPrice: '3.200.000 VNĐ',
     type: 'ONLINE',
-    image: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&q=80&w=800',
+    image: opt('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?'),
     perks: [
-      'Nền tảng: Zoom, Google Meet hoặc Discord.',
-      'Lịch học linh động theo lịch rảnh của học viên.',
-      'Hỗ trợ kèm 1 – 1 tận tình.',
-      'Giáo trình "cá nhân hóa" cho học viên.',
-      'Bài tập thực hành theo nhu cầu của học viên.',
-      'Đồng hành hỗ trợ học viên sau khóa học.'
-    ],
-    curriculum: [
-      { session: 'Buổi 1', title: 'Tư duy thiết kế & Làm quen Photoshop qua Zoom', topics: ['Bố cục trong Marketing', 'Màu sắc và Font chữ', 'Giao diện và công cụ cơ bản PS'] },
-      { session: 'Buổi 2-3', title: 'Xử lý hình ảnh chuyên sâu', topics: ['Cắt ghép vật thể', 'Chỉnh màu sắc sản phẩm', 'Retouch ảnh chân dung cơ bản'] },
-      { session: 'Buổi 4-5', title: 'Thiết kế ấn phẩm quảng cáo', topics: ['Banner Facebook/Ads', 'Poster sự kiện', 'Lồng ghép chữ nghệ thuật (Typography)'] },
-      { session: 'Buổi 6-8', title: 'Làm chủ Illustrator (Ai) trực tuyến', topics: ['Vẽ Vector chuyên nghiệp', 'Thiết kế Logo/Icon', 'Dàn trang Brochure/Menu'] },
-      { session: 'Buổi 9-10', title: 'Project cuối khóa & Portfolio', topics: ['Hoàn thiện bộ nhận diện', 'Xuất file in ấn/digital', 'Đóng gói profile cá nhân'] }
+      'Có video xem lại sau mỗi buổi học.',
+      'Hỗ trợ qua Ultraview/Teamview.',
+      'Giáo trình tinh gọn, ứng dụng cao.'
     ]
   },
   {
     id: 'photography-offline',
-    title: 'Khóa Học Nhiếp Ảnh & Retouch (OFFLINE)',
-    description: 'Làm chủ máy ảnh và kỹ thuật hậu kỳ Lightroom/Photoshop chuyên sâu.',
-    content: 'Từ kỹ thuật sử dụng máy ảnh đến tư duy xử lý hậu kỳ chuyên nghiệp cho ảnh chân dung và sản phẩm.',
-    duration: '8 buổi (tối thiểu 2h/buổi)',
-    suitableFor: ['Người mới bắt đầu', 'Marketers', 'Chủ shop'],
-    originalPrice: '5.700.000 VNĐ',
-    discountPrice: '4.800.000 VNĐ',
+    title: 'Kỹ năng Photoshop cho Photographer',
+    description: 'Trang bị kỹ năng Photoshop cần thiết để chỉnh sửa và hậu kỳ ảnh chuyên nghiệp',
+    content: 'Học retouch, chỉnh màu, ánh sáng và hoàn thiện ảnh theo workflow thực tế',
+    duration: '5 buổi',
+    suitableFor: ['Chủ shop online', 'Photographer'],
+    originalPrice: '3.800.000 VNĐ',
+    discountPrice: '2.900.000 VNĐ',
     type: 'OFFLINE',
-    image: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&q=80&w=800',
+    image: opt('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?'),
     perks: [
-      'Học trực tiếp với máy ảnh chuyên nghiệp.',
-      'Kèm 1-1 tư duy bố cục và ánh sáng.',
-      'Làm chủ Lightroom & Photoshop Retouch.',
-      'Hỗ trợ buổi chụp thực tế tại Studio.',
-      'Cung cấp kho preset độc quyền.'
-    ],
-    curriculum: [
-      { session: 'Buổi 1', title: 'Làm chủ máy ảnh & Thông số cơ bản', topics: ['ISO, Khẩu độ, Tốc độ', 'Cân bằng trắng WB', 'Các chế độ chụp M/A/S/P'] },
-      { session: 'Buổi 2', title: 'Tư duy bố cục & Ánh sáng', topics: ['Quy tắc 1/3, đường dẫn', 'Ánh sáng tự nhiên vs Nhân tạo', 'Góc máy trong nhiếp ảnh'] },
-      { session: 'Buổi 3-4', title: 'Thực hành chụp Chân dung/Sản phẩm', topics: ['Setup mẫu/bối cảnh', 'Điều phối ánh sáng', 'Lấy nét và kiểm soát DOF'] },
-      { session: 'Buổi 5-6', title: 'Hậu kỳ với Adobe Lightroom', topics: ['Quản lý thư viện ảnh', 'Chỉnh màu (Color Grading)', 'Lọc và xuất file hàng loạt'] },
-      { session: 'Buổi 7-8', title: 'Retouch chuyên sâu với Photoshop', topics: ['Xử lý da chuyên nghiệp', 'Nắn bóp hình thể (Liquify)', 'Ghép nền và tạo hiệu ứng'] }
+      'Retouch chuyên sâu, đánh sáng',
+      'Hỗ trợ các plugin chuyên dụng.',
+      'Hướng dẫn retouch ảnh sản phẩm cao cấp.'
     ]
-  }
-];
-
-export const CUSTOM_BUILDER_OPTIONS = {
-  softwares: [
-    { id: 'canva', name: 'Canva', icon: 'https://www.vectorlogo.zone/logos/canva/canva-icon.svg', color: '#00c4cc' },
-    { id: 'photoshop', name: 'Photoshop', icon: 'https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg', color: '#31a8ff' },
-    { id: 'illustrator', name: 'Illustrator', icon: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg', color: '#ff9a00' },
-    { id: 'capcut', name: 'CapCut', icon: 'https://cdn.icon-icons.com/icons2/3914/PNG/512/capcut_logo_icon_248719.png', color: '#ffffff' }
-  ],
-  onlineProducts: [
-    { id: 'social-media', name: 'Social Media Posts', icon: '📱' },
-    { id: 'poster-online', name: 'Poster Online', icon: '🎨' },
-    { id: 'banner-ads', name: 'Banner Quảng cáo', icon: '📈' },
-    { id: 'video-ads', name: 'Video Quảng cáo', icon: '🎬' },
-    { id: 'tiktok-reels', name: 'Video TikTok/Reels', icon: '🎵' },
-    { id: 'avatar-cover', name: 'Avatar & Ảnh bìa', icon: '👤' }
-  ],
-  printProducts: [
-    { id: 'magazine', name: 'Tạp chí/Sách', icon: '📖' },
-    { id: 'flyer', name: 'Tờ rơi/Menu', icon: '📄' },
-    { id: 'standee', name: 'Standee/Băng rôn', icon: '🚩' },
-    { id: 'business-card', name: 'Danh thiếp/Namecard', icon: '💳' }
-  ],
-  levels: [
-    { id: 'beginner', name: 'Người mới bắt đầu', description: 'Chưa biết gì về công cụ' },
-    { id: 'basic', name: 'Đã biết cơ bản', description: 'Muốn học nâng cao thực chiến' },
-    { id: 'fast', name: 'Cấp tốc', description: 'Học nhanh để đi làm ngay' }
-  ]
-};
-
-export const PRODUCTS: Product[] = [
-  {
-    id: 'template-marketing-01',
-    name: 'Combo 50+ Mẫu Canva chủ đề TẾT (2026)',
-    category: 'Canva',
-    price: 99000,
-    image: 'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767362560/templatecanva_ooy1ud.png',
-    description: 'Bộ template tổng hợp các mẫu thiết kế tết 1 file duy nhất Canva, dễ dàng chỉnh sửa và xuất ảnh',
-    features: ['Chỉnh sửa 100% trên Canva', 'Đa dạng kích thước', 'Hỗ trợ chỉnh sửa'],
-    reviewImages: [
-      opt('https://images.unsplash.com/photo-1608389163042-8347129571a5?'),
-      opt('https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?'),
-      opt('https://images.unsplash.com/photo-1549490349-8643362247b5?'),
-      opt('https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?')
-    ]
-  },
-  {
-    id: 'insta-brand-pack',
-    name: 'Instagram Brand Identity (30+ Templates)',
-    category: 'Canva',
-    price: 299000,
-    image: opt('https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?'),
-    description: 'Xây dựng hình ảnh Instagram chuyên nghiệp và đồng bộ chỉ trong 5 phút.',
-    features: ['Đầy đủ Post & Story', 'Tông màu sang trọng, hiện đại', 'Hướng dẫn phối màu thương hiệu'],
-    reviewImages: [
-      opt('https://images.unsplash.com/photo-1611162616475-46b635cb6868?'),
-      opt('https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?')
-    ]
-  },
-  {
-    id: 'ai-brushes-pro',
-    name: 'Hudesign Brush Pro for Illustrator',
-    category: 'Illustrator',
-    price: 250000,
-    image: opt('https://images.unsplash.com/photo-1558655146-d09347e92766?'),
-    description: 'Bộ Brush vẽ minh họa chuyên sâu, giúp nét vẽ tự nhiên như vẽ tay.',
-    features: ['30+ nét vẽ khác nhau', 'Hỗ trợ Ai mọi phiên bản', 'Hướng dẫn cài đặt chi tiết']
-  },
-  {
-    id: 'logo-kit-minimal',
-    name: 'Minimalist Logo Construction Kit',
-    category: 'Illustrator',
-    price: 350000,
-    image: opt('https://images.unsplash.com/photo-1626785774625-ddc7c82a173e?'),
-    description: 'Tự tạo Logo chuyên nghiệp từ các khối hình học cơ bản có sẵn.',
-    features: ['100+ thành phần Vector', 'Dễ dàng tùy biến hình dạng', 'Tặng kèm 20 bảng màu Logo']
-  },
-  {
-    id: 'psd-poster-mockup',
-    name: '10 PSD Mockup Poster Đường Phố',
-    category: 'Photoshop',
-    price: 150000,
-    image: opt('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?'),
-    description: 'Mockup chất lượng cao giúp bản thiết kế trông chuyên nghiệp hơn.',
-    features: ['Độ phân giải 4K', 'Dễ dàng thay đổi nội dung', 'Layer sắp xếp khoa học']
-  },
-  {
-    id: 'psd-text-effects',
-    name: 'Combo 20 Hiệu Ứng Chữ 3D Retro',
-    category: 'Photoshop',
-    price: 180000,
-    image: opt('https://images.unsplash.com/photo-1561070791-2526d30994b5?'),
-    description: 'Biến chữ viết bình thường thành tác phẩm nghệ thuật 3D chỉ với 1 click.',
-    features: ['Sử dụng Smart Object', 'Phong cách Retro/Vintage', 'Có thể chỉnh sửa font chữ']
-  },
-  {
-    id: 'all-in-one-cv',
-    name: 'Template CV & Portfolio Chuyên Nghiệp',
-    category: 'All',
-    price: 120000,
-    image: opt('https://images.unsplash.com/photo-1586281380349-632531db7ed4?'),
-    description: 'Mẫu hồ sơ năng lực giúp bạn nổi bật trong mắt nhà tuyển dụng.',
-    features: ['Có file Canva & Photoshop', 'Bố cục rõ ràng, hiện đại', 'Tặng kèm tài liệu hướng dẫn viết CV']
-  },
-  {
-    id: 'youtube-kit',
-    name: 'YouTube Content Creator Starter Kit',
-    category: 'All',
-    price: 450000,
-    image: opt('https://images.unsplash.com/photo-1524758631624-e2822e304c36?'),
-    description: 'Tất cả tài nguyên để bắt đầu kênh YouTube: Banner, Thumbnail, Intro Overlay.',
-    features: ['15+ mẫu Thumbnail clickbait', 'Banner tối ưu cho mọi thiết bị', 'Bản quyền trọn đời']
-  },
-  {
-    id: 'fashion-editorial',
-    name: 'Fashion Editorial Lookbook Template',
-    category: 'Photoshop',
-    price: 280000,
-    image: opt('https://images.unsplash.com/photo-1509631179647-0177331693ae?'),
-    description: 'Thiết kế Lookbook thời trang đẳng cấp như các tạp chí lớn.',
-    features: ['Layer thông minh', 'Tự động dàn trang', 'Phong cách tối giản High-end']
-  },
-  {
-    id: 'typography-poster',
-    name: 'Abstract Typography Poster Pack',
-    category: 'Illustrator',
-    price: 190000,
-    image: opt('https://images.unsplash.com/photo-1541462608141-ad60397d4573?'),
-    description: 'Bộ sưu tập poster chữ nghệ thuật trừu tượng đầy ấn tượng.',
-    features: ['Định dạng Vector AI/EPS', 'Dễ dàng thay đổi text', 'Màu sắc Pantone chuẩn in ấn']
-  },
-  {
-    id: 'food-menu-canva',
-    name: 'Restaurant & Cafe Menu (Canva Edit)',
-    category: 'Canva',
-    price: 220000,
-    image: opt('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?'),
-    description: 'Mẫu menu cho nhà hàng, quán cà phê sang trọng và thu hút.',
-    features: ['Bố cục 1-2 trang', 'Hình ảnh minh họa sắc nét', 'Font chữ Việt hóa sẵn']
   }
 ];
 
@@ -408,3 +223,27 @@ export const SPECIAL_FEATURES = [
     description: 'Nội dung được soạn riêng dựa trên nhu cầu và mục tiêu thực tế của bạn.'
   }
 ];
+
+export const CUSTOM_BUILDER_OPTIONS = {
+  softwares: [
+    { id: 'photoshop', name: 'Photoshop', icon: 'https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg' },
+    { id: 'illustrator', name: 'Illustrator', icon: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg' },
+    { id: 'canva', name: 'Canva Pro', icon: 'https://www.vectorlogo.zone/logos/canva/canva-icon.svg' },
+    { id: 'capcut', name: 'CapCut PC', icon: 'https://res.cloudinary.com/dcwgy4tnb/image/upload/f_auto/v1767362810/minh-hoa-canva-3_qk3iec.png' },
+  ],
+  onlineProducts: [
+    { id: 'fb-ads', name: 'Facebook Ads', icon: '📱' },
+    { id: 'tiktok-video', name: 'TikTok/Reels', icon: '🎬' },
+    { id: 'branding-online', name: 'Avatar/Cover', icon: '👤' },
+  ],
+  printProducts: [
+    { id: 'menu', name: 'Menu/Catalog', icon: '📖' },
+    { id: 'namecard', name: 'Name Card', icon: '💳' },
+    { id: 'poster', name: 'Poster/Banner', icon: '🖼️' },
+  ],
+  levels: [
+    { id: 'beginner', name: 'Người mới bắt đầu', description: 'Chưa biết gì về thiết kế hoặc công cụ.' },
+    { id: 'basic', name: 'Đã biết cơ bản', description: 'Đã dùng qua công cụ nhưng chưa có tư duy.' },
+    { id: 'advance', name: 'Muốn chuyên sâu', description: 'Đã làm được sản phẩm, muốn tối ưu hơn.' },
+  ]
+};

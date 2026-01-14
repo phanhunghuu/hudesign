@@ -1,7 +1,8 @@
 
 import React, { useRef } from 'react';
 import { PORTFOLIO_PROJECTS } from '../constants';
-import { ChevronLeft, ChevronRight, Image as ImageIcon, ExternalLink, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Image as ImageIcon, ExternalLink, Calendar, CreditCard } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const PortfolioPage: React.FC = () => {
   const scrollContainerRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -22,10 +23,17 @@ const PortfolioPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center mb-16 md:mb-24 space-y-6">
-          <div className="inline-flex items-center space-x-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full border border-indigo-100">
-            <ImageIcon size={16} />
-            <span className="text-[10px] font-black uppercase tracking-widest">Dự án đã thực hiện</span>
+          <div className="flex justify-center gap-3">
+            <div className="inline-flex items-center space-x-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full border border-indigo-100">
+              <ImageIcon size={16} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Dự án đã thực hiện</span>
+            </div>
+            <Link to="/pricing" className="inline-flex items-center space-x-2 bg-white text-slate-500 hover:text-indigo-600 px-4 py-2 rounded-full border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
+              <CreditCard size={16} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Xem Bảng giá dịch vụ</span>
+            </Link>
           </div>
+          
           <h1 className="text-5xl md:text-8xl font-black text-slate-900 leading-none tracking-tighter">
             Social Media <br/><span className="text-indigo-600 underline decoration-indigo-200 underline-offset-8">Design</span>
           </h1>
@@ -118,8 +126,8 @@ const PortfolioPage: React.FC = () => {
               <a href="#/courses" className="bg-indigo-600 text-white px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl active:scale-95">
                 Xem khóa học
               </a>
-              <a href="#/register" className="bg-white text-slate-900 px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-100 transition-all shadow-xl active:scale-95">
-                Nhận tư vấn ngay
+              <a href="#/design-brief" className="bg-white text-slate-900 px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-100 transition-all shadow-xl active:scale-95">
+                Book thiết kế ngay
               </a>
             </div>
           </div>

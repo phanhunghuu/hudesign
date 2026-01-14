@@ -24,6 +24,7 @@ export interface Course {
 
 export interface Product {
   id: string;
+  code: string; // Mã ngắn như CV001
   name: string;
   category: 'Canva' | 'Photoshop' | 'Illustrator' | 'All';
   price: number;
@@ -31,6 +32,7 @@ export interface Product {
   description: string;
   features: string[];
   reviewImages?: string[];
+  downloadUrl?: string; // Link tải file
 }
 
 export interface CustomerProject {

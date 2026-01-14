@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PRODUCTS } from '../constants';
+import { PRODUCTS } from '../products';
 import { ShoppingCart, Mail } from 'lucide-react';
 import { Product } from '../types';
 import ProductModal from './ProductModal';

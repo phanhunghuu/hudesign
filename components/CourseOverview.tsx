@@ -1,22 +1,10 @@
 
 import { Link } from 'react-router-dom';
 import { COURSES, SPECIAL_FEATURES } from '../constants';
-import { CheckCircle2, Clock, ArrowRight, Sparkles, Flame } from 'lucide-react';
+import { ArrowRight, Flame } from 'lucide-react';
 import React from 'react';
 
 const CourseOverview: React.FC = () => {
-  const getCardStyle = (id: string) => {
-    switch (id) {
-      case 'custom-path': return 'bg-slate-900 border-indigo-500/30 ring-4 ring-indigo-500/10';
-      case 'marketing-offline': return 'bg-indigo-600 shadow-indigo-200/50';
-      case 'capcut-pro': return 'bg-gradient-to-br from-purple-600 to-pink-600 shadow-purple-200/50';
-      case 'marketing-online': return 'bg-blue-600 shadow-blue-200/50';
-      case 'photography-offline': return 'bg-orange-600 shadow-orange-200/50';
-      case 'canva-marketing': return 'bg-cyan-600 shadow-cyan-200/50';
-      default: return 'bg-slate-800';
-    }
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10 md:mb-12 space-y-3">
@@ -29,73 +17,90 @@ const CourseOverview: React.FC = () => {
         {COURSES.map((course) => (
           <div 
             key={course.id} 
-            className={`${getCardStyle(course.id)} rounded-[2.5rem] p-8 md:p-10 transition-all duration-500 hover:-translate-y-2 group flex flex-col h-full text-white relative overflow-hidden shadow-2xl`}
+            className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 group h-full"
           >
-            {course.isHot && (
-              <div className="absolute top-0 right-0 z-20">
-                <div className="bg-red-500 text-white text-[10px] font-black py-1 px-8 rotate-45 translate-x-[25px] translate-y-[10px] shadow-sm flex items-center justify-center space-x-1">
-                  <Flame size={10} fill="currentColor" />
-                  <span>HOT</span>
-                </div>
-              </div>
-            )}
-            
-            {course.id === 'custom-path' && (
-              <div className="absolute top-6 right-6 animate-pulse">
-                <Sparkles className="text-indigo-400 w-6 h-6" />
-              </div>
-            )}
-            
-            <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all"></div>
-            
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="bg-white/20 backdrop-blur-md w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center mb-6 border border-white/30 font-black text-sm md:text-xl shadow-inner">
-                {course.id === 'custom-path' && "AI"}
-                {course.id === 'marketing-offline' && "PsAi"}
-                {course.id === 'capcut-pro' && "CC"}
-                {course.id === 'marketing-online' && "Zoom"}
-                {course.id === 'photography-offline' && "Photo"}
-                {course.id === 'canva-marketing' && "Cv"}
-              </div>
+            {/* 1. IMAGE SECTION - Tỉ lệ 2:1 Dẹp hơn - Clickable */}
+            <Link 
+              to={course.id === 'custom-path' ? "/custom-path" : `/courses/${course.id}`}
+              className="relative aspect-[2/1] overflow-hidden bg-slate-100 block cursor-pointer"
+            >
+              <img 
+                src={course.image} 
+                alt={course.title} 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-60"></div>
               
-              <h3 className="text-xl md:text-2xl font-black mb-2 leading-tight">{course.title}</h3>
-              
-              {course.id !== 'custom-path' && (
-                <div className="mb-4">
-                  <p className="text-[10px] font-black text-white/50 line-through decoration-white/30">{course.originalPrice}</p>
-                  <p className="text-2xl md:text-3xl font-black text-white">{course.discountPrice}</p>
+              <div className="absolute top-3 right-3">
+                <span className={`text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-widest shadow-sm ${course.type === 'ONLINE' ? 'bg-green-500 text-white' : 'bg-white text-indigo-700'}`}>
+                  {course.type}
+                </span>
+              </div>
+
+              {course.isHot && (
+                <div className="absolute top-3 left-0">
+                  <span className="bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-r-md uppercase tracking-widest shadow-md flex items-center gap-1">
+                    <Flame size={10} fill="currentColor" /> HOT
+                  </span>
                 </div>
               )}
+            </Link>
 
-              <div className="space-y-4 flex-grow">
-                <div className="flex items-start space-x-3">
-                  <CheckCircle2 className={`w-5 h-5 mt-0.5 flex-shrink-0 ${course.id === 'custom-path' ? 'text-indigo-400' : 'text-white/60'}`} />
-                  {/* CHỈNH font-thin Ở ĐÂY */}
-                  <p className="text-sm text-white/90 leading-relaxed font-thin line-clamp-2">{course.description}</p>
-                </div>
-                
-                <div className="flex items-center space-x-3 bg-black/10 w-fit px-4 py-2 rounded-full border border-white/5">
-                  <Clock className="w-4 h-4 text-white/50" />
-                  {/* CHỈNH font-thin Ở ĐÂY */}
-                  <span className="text-xs text-white/80 font-thin uppercase tracking-wider">{course.duration}</span>
+            {/* 2. BODY SECTION - Compact padding */}
+            <div className="p-5 flex-grow flex flex-col">
+              
+              {/* Tên Khóa Học - Clickable */}
+              <Link to={course.id === 'custom-path' ? "/custom-path" : `/courses/${course.id}`} className="block mb-1">
+                <h3 className="text-xl md:text-3xl font-black text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2 min-h-[3.5rem] md:min-h-[4.5rem]">
+                  {course.title}
+                </h3>
+              </Link>
+
+              {/* Giới thiệu ngắn */}
+              <p className="text-slate-500 text-xs font-medium line-clamp-2 leading-relaxed mb-4">
+                {course.description}
+              </p>
+
+              {/* Info Wrapper - Chỉ hiển thị Tag, BỎ icon công cụ */}
+              <div className="mb-4">
+                <div className="flex flex-wrap gap-2">
+                  {course.suitableFor.slice(0, 3).map((item, idx) => (
+                    <span key={idx} className="bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-600">
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              <div className="mt-10">
-                <Link 
-                  to={course.id === 'custom-path' ? "/custom-path" : `/courses/${course.id}`}
-                  className={`flex items-center justify-center space-x-3 w-full py-4 rounded-2xl text-sm font-black transition-all shadow-xl active:scale-95 group/btn ${course.id === 'custom-path' ? 'bg-indigo-600 text-white hover:bg-indigo-500' : 'bg-white text-slate-900 hover:bg-indigo-50'}`}
-                >
-                  {course.id === 'custom-path' && <Sparkles size={18} />}
-                  <span>{course.id === 'custom-path' ? 'XÂY LỘ TRÌNH NGAY' : 'CHI TIẾT KHÓA HỌC'}</span>
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
+              {/* Đường kẻ & Giá - Đẩy xuống đáy */}
+              <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                   <div className="flex flex-col">
+                      {course.id !== 'custom-path' && (
+                        <span className="text-xs text-slate-400 line-through decoration-slate-300 font-medium mb-0.5">{course.originalPrice}</span>
+                      )}
+                      <span className="text-2xl font-black text-indigo-600 tracking-tight leading-none">{course.discountPrice}</span>
+                   </div>
               </div>
+
             </div>
+
+            {/* 3. FOOTER ACTION BUTTON - Compact height */}
+            <Link 
+              to={course.id === 'custom-path' ? "/custom-path" : `/courses/${course.id}`}
+              className={`py-3.5 px-6 text-center text-white font-bold text-xs transition-all flex items-center justify-center gap-2 group/btn relative overflow-hidden ${course.id === 'custom-path' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-slate-900 hover:bg-indigo-600'}`}
+            >
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]"></div>
+              
+              <span className="relative z-10 uppercase tracking-widest">
+                {course.id === 'custom-path' ? 'Thiết kế lộ trình' : 'Đăng ký ngay'}
+              </span>
+              <ArrowRight size={14} className="relative z-10 group-hover/btn:translate-x-1 transition-transform" />
+            </Link>
           </div>
         ))}
       </div>
 
+      {/* CORE VALUES SECTION */}
       <div className="bg-slate-900 rounded-[3rem] p-10 md:p-16 text-white relative overflow-hidden shadow-2xl border border-white/5">
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent"></div>
         
@@ -105,7 +110,6 @@ const CourseOverview: React.FC = () => {
                <span className="text-indigo-400 text-[10px] font-black uppercase tracking-widest">Core Values</span>
             </div>
             <h3 className="text-3xl md:text-4xl font-black leading-tight">Tại sao chọn <br/><span className="text-indigo-500 text-6xl">HU</span>DESIGN?</h3>
-            {/* CHỈNH font-thin Ở ĐÂY */}
             <p className="text-slate-400 text-base leading-relaxed font-thin">Chúng tôi không chỉ dạy công cụ, chúng tôi dạy tư duy thẩm mỹ thực chiến để bạn tự tin sáng tạo.</p>
           </div>
           
@@ -116,7 +120,6 @@ const CourseOverview: React.FC = () => {
                   {React.cloneElement(feature.icon as React.ReactElement<any>, { className: 'w-8 h-8 text-indigo-400' })}
                 </div>
                 <h4 className="text-lg font-black tracking-tight">{feature.title}</h4>
-                {/* CHỈNH font-thin Ở ĐÂY */}
                 <p className="text-slate-400 text-xs leading-relaxed font-thin">{feature.description}</p>
               </div>
             ))}
