@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Check, X, Mail, CreditCard, PenTool, Layout, Image as ImageIcon, 
-  Printer, FileText, ArrowRight, Star, Zap, Shield, Crown, HelpCircle 
+  Printer, FileText, ArrowRight, Star, Zap, Shield, Crown, HelpCircle, AlertCircle
 } from 'lucide-react';
 
 const GENERAL_SERVICES = [
@@ -185,7 +185,7 @@ const PricingPage: React.FC = () => {
         </div>
 
         {/* SECTION 1: LOGO PACKAGES (MOVED TO TOP) */}
-        <div className="mb-24">
+        <div className="mb-12">
           <div className="flex items-center space-x-3 mb-8">
             <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200">
                <Crown size={24} />
@@ -316,6 +316,33 @@ const PricingPage: React.FC = () => {
           </div>
         </div>
 
+        {/* EXTRA INFO - MOVED HERE */}
+        <div className="mb-24 bg-white rounded-[2rem] p-8 md:p-12 border border-slate-100 shadow-lg text-center space-y-6">
+           <h3 className="text-2xl font-black text-slate-900">Sản phẩm thêm theo yêu cầu</h3>
+           <div className="grid md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto">
+              <div className="space-y-3">
+                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                    <Check size={16} className="text-indigo-600" />
+                    <span>Thêm 1 phương án thiết kế Logo: <strong className="text-slate-900">500.000đ</strong></span>
+                 </p>
+                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                    <Check size={16} className="text-indigo-600" />
+                    <span>Dựng Video Intro Logo (5-10s): <strong className="text-slate-900">1.000.000đ</strong></span>
+                 </p>
+              </div>
+              <div className="space-y-3">
+                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                    <Check size={16} className="text-indigo-600" />
+                    <span>Thiết kế Cẩm nang Ý nghĩa & Quy chuẩn Logo: <strong className="text-slate-900">500.000đ</strong></span>
+                 </p>
+                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                    <Check size={16} className="text-indigo-600" />
+                    <span>Cẩm nang thương hiệu + Hướng dẫn sử dụng: <strong className="text-slate-900">2.000.000đ</strong></span>
+                 </p>
+              </div>
+           </div>
+        </div>
+
         {/* SECTION 2: GENERAL SERVICES (MOVED DOWN) */}
         <div className="mb-24">
           <div className="flex items-center space-x-3 mb-8">
@@ -356,37 +383,24 @@ const PricingPage: React.FC = () => {
           </div>
         </div>
 
-        {/* EXTRA INFO */}
-        <div className="mt-16 bg-white rounded-[2rem] p-8 md:p-12 border border-slate-100 shadow-lg text-center space-y-6">
-           <h3 className="text-2xl font-black text-slate-900">Sản phẩm thêm theo yêu cầu</h3>
-           <div className="grid md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto">
-              <div className="space-y-3">
-                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
-                    <Check size={16} className="text-indigo-600" />
-                    <span>Thêm 1 phương án thiết kế Logo: <strong className="text-slate-900">500.000đ</strong></span>
-                 </p>
-                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
-                    <Check size={16} className="text-indigo-600" />
-                    <span>Dựng Video Intro Logo (5-10s): <strong className="text-slate-900">1.000.000đ</strong></span>
-                 </p>
-              </div>
-              <div className="space-y-3">
-                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
-                    <Check size={16} className="text-indigo-600" />
-                    <span>Thiết kế Cẩm nang Ý nghĩa & Quy chuẩn Logo: <strong className="text-slate-900">500.000đ</strong></span>
-                 </p>
-                 <p className="flex items-center gap-2 text-sm font-medium text-slate-600">
-                    <Check size={16} className="text-indigo-600" />
-                    <span>Cẩm nang thương hiệu + Hướng dẫn sử dụng: <strong className="text-slate-900">2.000.000đ</strong></span>
-                 </p>
-              </div>
-           </div>
-           <div className="pt-6 border-t border-slate-100 mt-6">
-              <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-xl text-xs font-bold border border-indigo-100">
-                 <HelpCircle size={14} />
-                 <span>Lưu ý: Bảng giá trên chưa bao gồm 10% thuế VAT</span>
-              </div>
-           </div>
+        {/* IMPORTANT NOTES SECTION (UPDATED) */}
+        <div className="mt-16 bg-slate-100 rounded-[2rem] p-8 md:p-12 border border-slate-200">
+           <h3 className="text-xl font-black text-slate-900 uppercase mb-6 flex items-center gap-2">
+              <AlertCircle size={24} className="text-red-500" />
+              LƯU Ý QUAN TRỌNG
+           </h3>
+           <ul className="space-y-3 text-sm font-medium text-slate-600 leading-relaxed list-disc pl-5">
+              <li><strong className="text-slate-900">Bảng giá trên chưa bao gồm 10% thuế VAT.</strong></li>
+              <li>Bảng giá áp dụng cho phạm vi công việc đã nêu. Các yêu cầu ngoài phạm vi sẽ được báo phí riêng trước khi thực hiện.</li>
+              <li>Giá chưa bao gồm chi phí in ấn, mua tài nguyên trả phí, bản quyền hình ảnh / font (nếu có).</li>
+              <li>Số lần chỉnh sửa được áp dụng theo gói đã chọn. Các chỉnh sửa phát sinh ngoài số lần quy định sẽ tính thêm phí.</li>
+              <li>Thay đổi ý tưởng, phong cách hoặc nội dung chính sau khi đã duyệt concept được xem là yêu cầu mới.</li>
+              <li>Thời gian hoàn thành có thể thay đổi nếu khách hàng cung cấp nội dung chậm hoặc chỉnh sửa nhiều lần.</li>
+              <li>Designer không chịu trách nhiệm với lỗi phát sinh do nội dung khách cung cấp (sai chính tả, sai thông tin…).</li>
+              <li>File bàn giao là file thiết kế theo thỏa thuận. File gốc (AI/PSD) chỉ bao gồm nếu đã ghi rõ trong báo giá.</li>
+              <li>Sản phẩm thiết kế chỉ được sử dụng cho mục đích đã thống nhất, mọi mục đích khác cần trao đổi thêm.</li>
+              <li>Thanh toán theo thỏa thuận. Công việc chỉ được bàn giao đầy đủ sau khi hoàn tất thanh toán.</li>
+           </ul>
         </div>
 
         {/* CTA BOTTOM */}
