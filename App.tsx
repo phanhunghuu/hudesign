@@ -5,8 +5,10 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Loader2 } from 'lucide-react';
 
-// Lazy load các trang để tối ưu tốc độ tải ban đầu
-const HomePage = lazy(() => import('./pages/HomePage'));
+// 1. IMPORT TRỰC TIẾP TRANG CHỦ (Để load nhanh nhất, không bị nháy loading khi vào web)
+import HomePage from './pages/HomePage';
+
+// 2. LAZY LOAD CÁC TRANG CON (Để giảm dung lượng file ban đầu)
 const CoursesPage = lazy(() => import('./pages/CoursesPage'));
 const CourseDetailPage = lazy(() => import('./pages/CourseDetailPage'));
 const CustomPathPage = lazy(() => import('./pages/CustomPathPage'));
@@ -30,12 +32,12 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Component Loading hiển thị khi chuyển trang
+// 3. TỐI ƯU LOADER: Full màn hình (min-h-screen) để Footer không bị giật lên xuống
 const PageLoader = () => (
-  <div className="min-h-[60vh] flex items-center justify-center">
-    <div className="flex flex-col items-center space-y-4">
-      <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
-      <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Đang tải...</p>
+  <div className="min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="flex flex-col items-center space-y-4 animate-in fade-in duration-300">
+      <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
+      <p className="text-slate-400 font-black text-xs uppercase tracking-widest animate-pulse">Đang tải trải nghiệm...</p>
     </div>
   </div>
 );
@@ -47,9 +49,13 @@ const App: React.FC = () => {
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">
+          {/* Suspense bọc các Route lazy */}
           <Suspense fallback={<PageLoader />}>
             <Routes>
+              {/* Trang chủ load ngay lập tức */}
               <Route path="/" element={<HomePage />} />
+              
+              {/* Các trang còn lại tải khi cần thiết */}
               <Route path="/courses" element={<CoursesPage />} />
               <Route path="/courses/:courseId" element={<CourseDetailPage />} />
               <Route path="/custom-path" element={<CustomPathPage />} />
