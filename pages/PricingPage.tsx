@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -8,7 +9,7 @@ import {
 const GENERAL_SERVICES = [
   {
     title: "Phong bì thư",
-    price: "300K - 500K",
+    price: "500.000 VNĐ",
     features: [
       "Thiết kế mới hoàn toàn",
       "Đảm bảo tính thẩm mỹ & nhận diện",
@@ -18,7 +19,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Thiệp mời",
-    price: "300K",
+    price: "300.000 VNĐ",
     features: [
       "Thiết kế đảm bảo tính thẩm mỹ",
       "Sử dụng tone màu phù hợp",
@@ -28,10 +29,10 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Menu",
-    price: "Từ 200K",
+    price: "Từ 400.000 VNĐ",
     features: [
-      "Trang bìa: 200K",
-      "Trang nội dung: 150K - 200K/trang",
+      "Trang bìa: 400.000 VNĐ",
+      "Trang nội dung: 300.000 VNĐ/trang",
       "Đảm bảo tính thẩm mỹ & logic",
       "Chỉnh sửa thiết kế: 2 lần"
     ],
@@ -39,7 +40,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Standee",
-    price: "250K - 450K",
+    price: "350.000 - 750.000 VNĐ",
     features: [
       "Thiết kế mới hoàn toàn",
       "Đầy đủ thông tin yêu cầu",
@@ -50,7 +51,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Backdrop",
-    price: "500K - 1tr",
+    price: "1.000.000 - 1.500.000 VNĐ",
     features: [
       "Sự kiện, hội nghị, sinh nhật",
       "Đúng nhận diện thương hiệu",
@@ -61,7 +62,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Banner/Cover",
-    price: "250K - 450K",
+    price: "350.000 - 450.000 VNĐ",
     features: [
       "Website / Facebook / Social",
       "Dựa trên ý tưởng khách hàng",
@@ -72,7 +73,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Thẻ (Card/Voucher)",
-    price: "400K",
+    price: "400.000 VNĐ",
     features: [
       "Thẻ đeo, thẻ VIP, thẻ bảo hành...",
       "Thiết kế ấn tượng, chuyên nghiệp",
@@ -83,7 +84,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Tờ rơi / Tờ gấp",
-    price: "500K - 1tr",
+    price: "1.000.000 - 1.500.000 VNĐ",
     features: [
       "Đưa đầy đủ thông tin khách hàng",
       "Thiết kế ấn tượng, bắt mắt",
@@ -183,48 +184,8 @@ const PricingPage: React.FC = () => {
           </p>
         </div>
 
-        {/* SECTION 1: GENERAL SERVICES */}
+        {/* SECTION 1: LOGO PACKAGES (MOVED TO TOP) */}
         <div className="mb-24">
-          <div className="flex items-center space-x-3 mb-8">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200">
-               <PenTool size={24} />
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 uppercase">Thiết kế Đồ họa</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {GENERAL_SERVICES.map((service, index) => (
-              <div key={index} className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 hover:shadow-xl hover:border-indigo-100 transition-all group flex flex-col h-full">
-                <div className="mb-4 bg-indigo-50 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
-                  {service.icon}
-                </div>
-                <h3 className="text-lg font-black text-slate-900 uppercase mb-2">{service.title}</h3>
-                <div className="mb-6">
-                  <span className="inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-black tracking-tight">
-                    {service.price}
-                  </span>
-                </div>
-                <ul className="space-y-3 mb-6 flex-grow">
-                  {service.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start space-x-2 text-xs text-slate-500 font-medium leading-relaxed">
-                      <div className="min-w-[4px] h-[4px] rounded-full bg-slate-300 mt-1.5"></div>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link 
-                  to="/design-brief" 
-                  className="w-full py-3 rounded-xl bg-slate-50 text-slate-600 font-black text-xs uppercase tracking-widest text-center hover:bg-indigo-600 hover:text-white transition-all"
-                >
-                  Đặt thiết kế
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* SECTION 2: LOGO PACKAGES TABLE */}
-        <div>
           <div className="flex items-center space-x-3 mb-8">
             <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200">
                <Crown size={24} />
@@ -232,9 +193,10 @@ const PricingPage: React.FC = () => {
             <h2 className="text-3xl font-black text-slate-900 uppercase">Bảng giá Thiết kế Logo</h2>
           </div>
 
-          <div className="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden">
+          {/* DESKTOP TABLE VIEW */}
+          <div className="hidden md:block bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden">
             {/* Table Header (Desktop) */}
-            <div className="hidden md:grid grid-cols-5 bg-slate-50 border-b border-slate-200">
+            <div className="grid grid-cols-5 bg-slate-50 border-b border-slate-200">
               <div className="p-6 flex items-end">
                  <p className="font-black text-slate-400 text-xs uppercase tracking-widest">Thông tin gói</p>
               </div>
@@ -253,23 +215,18 @@ const PricingPage: React.FC = () => {
             {/* Table Body */}
             <div className="divide-y divide-slate-100">
               {LOGO_FEATURES.map((feature, idx) => (
-                <div key={idx} className="grid md:grid-cols-5 hover:bg-slate-50/50 transition-colors">
+                <div key={idx} className="grid grid-cols-5 hover:bg-slate-50/50 transition-colors">
                   {/* Feature Name */}
-                  <div className="p-4 md:p-6 md:border-r border-slate-100 flex flex-col justify-center">
+                  <div className="p-6 border-r border-slate-100 flex flex-col justify-center">
                     <p className="font-bold text-slate-900 text-sm mb-1">{feature.name}</p>
                     {feature.desc && <p className="text-[10px] text-slate-400 font-medium leading-tight">{feature.desc}</p>}
                   </div>
 
                   {/* Feature Values per Package */}
                   {feature.values.map((val, vIdx) => (
-                    <div key={vIdx} className="p-3 md:p-6 flex items-center justify-center border-b md:border-b-0 border-slate-50 last:border-0 md:border-r last:md:border-r-0">
-                      {/* Mobile Label */}
-                      <span className="md:hidden text-[10px] font-bold text-slate-400 uppercase mr-auto w-1/3">
-                        {LOGO_PACKAGES[vIdx].name}
-                      </span>
-                      
+                    <div key={vIdx} className="p-6 flex items-center justify-center border-r last:border-r-0 border-slate-50">
                       {/* Value Display */}
-                      <div className="w-2/3 md:w-full text-center flex justify-end md:justify-center">
+                      <div className="text-center">
                         {val === true ? (
                           <div className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
                             <Check size={14} strokeWidth={3} />
@@ -289,10 +246,10 @@ const PricingPage: React.FC = () => {
             </div>
 
             {/* Table Footer Actions */}
-            <div className="grid md:grid-cols-5 bg-slate-50 border-t border-slate-200 p-6 md:p-0">
-               <div className="hidden md:block p-6"></div>
+            <div className="grid grid-cols-5 bg-slate-50 border-t border-slate-200">
+               <div className="p-6"></div>
                {LOGO_PACKAGES.map(pkg => (
-                 <div key={pkg.id} className="p-2 md:p-6">
+                 <div key={pkg.id} className="p-6">
                     <Link 
                       to={`/design-brief?service=logo`}
                       className={`w-full py-3 rounded-xl font-black text-xs uppercase tracking-widest text-center block text-white shadow-lg hover:opacity-90 transition-all active:scale-95 ${pkg.color}`}
@@ -302,6 +259,100 @@ const PricingPage: React.FC = () => {
                  </div>
                ))}
             </div>
+          </div>
+
+          {/* MOBILE CARDS VIEW */}
+          <div className="md:hidden space-y-6">
+            {LOGO_PACKAGES.map((pkg, pkgIndex) => (
+              <div key={pkg.id} className="bg-white rounded-[2rem] shadow-xl shadow-slate-200 border border-slate-100 overflow-hidden relative flex flex-col">
+                {/* Card Header */}
+                <div className={`${pkg.color} p-6 text-white text-center relative`}>
+                   <div className="absolute top-0 left-0 w-full h-full bg-black/10"></div>
+                   <div className="relative z-10">
+                     <div className="mx-auto w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-3 shadow-inner ring-2 ring-white/30">
+                       {pkg.icon}
+                     </div>
+                     <h3 className="font-black text-xl uppercase mb-1 tracking-tight">{pkg.name}</h3>
+                     <p className="font-black text-3xl tracking-tighter">{pkg.price} <span className="text-sm font-bold opacity-80 align-middle">VNĐ</span></p>
+                   </div>
+                </div>
+                
+                {/* Features List */}
+                <div className="p-6 space-y-4 flex-grow">
+                  {LOGO_FEATURES.map((feature, fIndex) => {
+                    const val = feature.values[pkgIndex];
+                    if (val === false) return null; // Ẩn các tính năng không có
+                    return (
+                      <div key={fIndex} className="flex items-start gap-3 text-sm">
+                        <div className="shrink-0 mt-0.5">
+                          {val === true ? (
+                            <Check size={18} className="text-green-500" strokeWidth={3} />
+                          ) : (
+                            <Star size={18} className="text-indigo-500 fill-indigo-100" />
+                          )}
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-700 block">{feature.name}</span>
+                          {val !== true && (
+                            <span className="text-indigo-600 font-black block mt-0.5">{val}</span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Footer Action */}
+                <div className="p-6 pt-0 mt-auto">
+                   <Link 
+                      to={`/design-brief?service=logo`}
+                      className={`block w-full py-4 rounded-xl font-black text-sm uppercase tracking-widest text-center text-white shadow-lg hover:brightness-110 active:scale-95 transition-all ${pkg.color}`}
+                    >
+                      Chọn gói {pkg.name}
+                   </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* SECTION 2: GENERAL SERVICES (MOVED DOWN) */}
+        <div className="mb-24">
+          <div className="flex items-center space-x-3 mb-8">
+            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200">
+               <PenTool size={24} />
+            </div>
+            <h2 className="text-3xl font-black text-slate-900 uppercase">Thiết kế Đồ họa</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {GENERAL_SERVICES.map((service, index) => (
+              <div key={index} className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 hover:shadow-xl hover:border-indigo-100 transition-all group flex flex-col h-full">
+                <div className="mb-4 bg-indigo-50 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
+                  {service.icon}
+                </div>
+                <h3 className="text-lg font-black text-slate-900 uppercase mb-2">{service.title}</h3>
+                <div className="mb-6">
+                  <span className="inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-black tracking-tight whitespace-nowrap">
+                    {service.price}
+                  </span>
+                </div>
+                <ul className="space-y-3 mb-6 flex-grow">
+                  {service.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start space-x-2 text-xs text-slate-500 font-medium leading-relaxed">
+                      <div className="min-w-[4px] h-[4px] rounded-full bg-slate-300 mt-1.5"></div>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link 
+                  to="/design-brief" 
+                  className="w-full py-3 rounded-xl bg-slate-50 text-slate-600 font-black text-xs uppercase tracking-widest text-center hover:bg-indigo-600 hover:text-white transition-all"
+                >
+                  Đặt thiết kế
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
 
