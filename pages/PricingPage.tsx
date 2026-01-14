@@ -8,7 +8,7 @@ import {
 const GENERAL_SERVICES = [
   {
     title: "Phong bì thư",
-    price: "500K",
+    price: "300K - 500K",
     features: [
       "Thiết kế mới hoàn toàn",
       "Đảm bảo tính thẩm mỹ & nhận diện",
@@ -28,10 +28,10 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Menu",
-    price: "Từ 400K",
+    price: "Từ 200K",
     features: [
-      "Trang bìa: 400K",
-      "Trang nội dung: 300K/trang",
+      "Trang bìa: 200K",
+      "Trang nội dung: 150K - 200K/trang",
       "Đảm bảo tính thẩm mỹ & logic",
       "Chỉnh sửa thiết kế: 2 lần"
     ],
@@ -39,7 +39,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Standee",
-    price: "350K - 750K",
+    price: "250K - 450K",
     features: [
       "Thiết kế mới hoàn toàn",
       "Đầy đủ thông tin yêu cầu",
@@ -50,7 +50,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Backdrop",
-    price: "1tr - 1.5tr",
+    price: "500K - 1tr",
     features: [
       "Sự kiện, hội nghị, sinh nhật",
       "Đúng nhận diện thương hiệu",
@@ -61,7 +61,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Banner/Cover",
-    price: "350K - 450K",
+    price: "250K - 450K",
     features: [
       "Website / Facebook / Social",
       "Dựa trên ý tưởng khách hàng",
@@ -83,7 +83,7 @@ const GENERAL_SERVICES = [
   },
   {
     title: "Tờ rơi / Tờ gấp",
-    price: "1tr - 1.5tr",
+    price: "500K - 1tr",
     features: [
       "Đưa đầy đủ thông tin khách hàng",
       "Thiết kế ấn tượng, bắt mắt",
