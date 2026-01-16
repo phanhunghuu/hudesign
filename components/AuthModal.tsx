@@ -22,12 +22,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
     password: ''
   });
 
-  // Bắt lỗi từ URL khi Supabase redirect về bị lỗi (như lỗi link hết hạn)
   useEffect(() => {
     const hash = window.location.hash;
     if (hash.includes('error_code=otp_expired') || hash.includes('error_description=Email+link+is+invalid')) {
       setError('Link xác nhận đã hết hạn hoặc không hợp lệ. Vui lòng đăng ký lại hoặc gửi lại email xác nhận!');
-      setIsLogin(false); // Chuyển sang tab đăng ký để họ thử lại
+      setIsLogin(false);
     } else if (hash.includes('error_code=')) {
       setError('Có lỗi xảy ra trong quá trình xác thực. Vui lòng thử lại!');
     }
@@ -87,11 +86,29 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
 
         if (signUpError) throw signUpError;
 
-        // Nếu đăng ký thành công và không có session (nghĩa là cần xác nhận email)
+        // TẠO PROFILE MỚI VỚI 5 CREDITS
+        if (data?.user) {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert([
+              { 
+                id: data.user.id, 
+                email: formData.email,
+                full_name: formData.name,
+                credits: 5, // Tặng 5 lượt
+                is_vip: false
+              }
+            ]);
+            
+          if (profileError) {
+             console.error("Lỗi tạo profile:", profileError);
+             // Không throw lỗi chặn dòng chảy, chỉ log lại
+          }
+        }
+
         if (data?.user && !data.session) {
           setSuccess(true);
         } else if (data?.session) {
-          // Nếu hệ thống config tắt "Confirm Email", đăng nhập luôn
           setSuccess(true);
           setTimeout(() => {
             onLoginSuccess({ 
@@ -105,13 +122,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSuccess }
     } catch (err: any) {
       console.error("Auth error:", err);
       let msg = err.message;
-      
-      // Dịch lỗi Supabase sang tiếng Việt
       if (msg.includes('Invalid login credentials')) msg = 'Email hoặc mật khẩu không chính xác!';
       else if (msg.includes('User already registered')) msg = 'Email này đã được đăng ký!';
       else if (msg.includes('Password should be')) msg = 'Mật khẩu cần tối thiểu 6 ký tự!';
       else if (msg.includes('Email not confirmed')) msg = 'Tài khoản chưa được xác minh! Vui lòng kiểm tra email của bạn để kích hoạt.';
-      else if (msg.includes('rate limit')) msg = 'Bạn đã thao tác quá nhanh, vui lòng đợi một lát!';
       
       setError(msg);
     } finally {

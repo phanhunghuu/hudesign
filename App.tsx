@@ -5,10 +5,10 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Loader2 } from 'lucide-react';
 
-// 1. IMPORT TRỰC TIẾP TRANG CHỦ (Để load nhanh nhất, không bị nháy loading khi vào web)
+// 1. IMPORT TRỰC TIẾP TRANG CHỦ
 import HomePage from './pages/HomePage';
 
-// 2. LAZY LOAD CÁC TRANG CON (Để giảm dung lượng file ban đầu)
+// 2. LAZY LOAD CÁC TRANG CON
 const CoursesPage = lazy(() => import('./pages/CoursesPage'));
 const CourseDetailPage = lazy(() => import('./pages/CourseDetailPage'));
 const CustomPathPage = lazy(() => import('./pages/CustomPathPage'));
@@ -23,6 +23,7 @@ const DesignBriefPage = lazy(() => import('./pages/DesignBriefPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
+const AiStudioPage = lazy(() => import('./pages/AiStudioPage')); // NEW IMPORT
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -32,7 +33,7 @@ const ScrollToTop = () => {
   return null;
 };
 
-// 3. TỐI ƯU LOADER: Full màn hình (min-h-screen) để Footer không bị giật lên xuống
+// 3. TỐI ƯU LOADER
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-slate-50">
     <div className="flex flex-col items-center space-y-4 animate-in fade-in duration-300">
@@ -46,16 +47,18 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
+      {/* 
+         Logic ẩn Navbar/Footer cho trang AI Studio để có trải nghiệm Fullscreen Immersive.
+         Tuy nhiên, vì Router nằm trong App, ta cần check location bên trong một component con hoặc chấp nhận hiển thị Navbar.
+         Ở đây, với yêu cầu "Liên kết đến nút AI Studio ở Header", ta vẫn giữ Navbar nhưng có thể trong AiStudioPage ta sẽ dùng CSS fixed đè lên hoặc ẩn đi.
+         Trong thiết kế AiStudioPage bên trên, tôi đã dùng "fixed inset-0 z-[200]" để nó phủ lên toàn bộ, nên không cần sửa App structure nhiều.
+      */}
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">
-          {/* Suspense bọc các Route lazy */}
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              {/* Trang chủ load ngay lập tức */}
               <Route path="/" element={<HomePage />} />
-              
-              {/* Các trang còn lại tải khi cần thiết */}
               <Route path="/courses" element={<CoursesPage />} />
               <Route path="/courses/:courseId" element={<CourseDetailPage />} />
               <Route path="/custom-path" element={<CustomPathPage />} />
@@ -70,6 +73,7 @@ const App: React.FC = () => {
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/ai-studio" element={<AiStudioPage />} /> {/* NEW ROUTE */}
             </Routes>
           </Suspense>
         </main>
