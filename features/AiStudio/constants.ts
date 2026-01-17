@@ -6,7 +6,7 @@ export const AI_TASKS = [
     id: 'sales-design',
     label: 'Thiết kế Bán hàng (HOT)',
     icon: ShoppingBag,
-    hiddenPrompt: "ROLE: Professional Advertising Designer. TASK: Create a high-converting e-commerce advertisement image. Leave negative space for text. Style: Modern, Commercial.",
+    hiddenPrompt: "ROLE: Expert Advertising Designer. GOAL: Create a high-converting product background for e-commerce. RULES: 1. Minimalist and clean composition. 2. Leave 30% negative space for overlay text. 3. Lighting must be soft studio quality. 4. Style: Commercial, Premium, Modern. 5. NO text, NO blurry elements.",
     defaultRatio: '1:1',
     description: 'Tạo ảnh quảng cáo sản phẩm chuyên nghiệp, tối ưu chuyển đổi.'
   },
@@ -14,7 +14,7 @@ export const AI_TASKS = [
     id: 'product-photo',
     label: 'Chụp ảnh Sản phẩm',
     icon: Camera,
-    hiddenPrompt: "ROLE: World-class Product Photographer. TASK: Place the product in a stunning, realistic environment. Soft studio lighting, bokeh background. 8k resolution.",
+    hiddenPrompt: "ROLE: World-class Product Photographer. GOAL: Hyper-realistic product photography. RULES: 1. Depth of field with bokeh background. 2. Lighting: Dramatic rim light or soft window light. 3. Texture: 8K resolution, highly detailed. 4. Context: Luxury environment suitable for the object. 5. Photorealistic, NOT illustration.",
     defaultRatio: '4:3',
     requiresImage: true,
     description: 'Ghép sản phẩm vào bối cảnh studio 8K siêu thực.'
@@ -23,7 +23,7 @@ export const AI_TASKS = [
     id: 'pattern-design',
     label: 'Họa tiết Độc quyền',
     icon: Palette,
-    hiddenPrompt: "ROLE: Textile & Surface Designer. TASK: Create a seamless, tileable pattern design. Vector art style or fabric texture.",
+    hiddenPrompt: "ROLE: Textile & Surface Designer. GOAL: Create a Seamless Pattern. RULES: 1. View: Top-down flat lay (2D). 2. No perspective, no shadows, no depth. 3. Style: Vector art, clean lines, or fabric texture. 4. Repeatable design. 5. Colors: Harmonious palette.",
     defaultRatio: '1:1',
     description: 'Thiết kế hoa văn, họa tiết vải vóc hoặc bao bì.'
   },
@@ -31,7 +31,7 @@ export const AI_TASKS = [
     id: 'outfit-change',
     label: 'Thay đổi Trang phục',
     icon: Shirt,
-    hiddenPrompt: "ROLE: Fashion Stylist. TASK: Change the outfit of the person while keeping the pose exactly the same. Realistic fabric textures.",
+    hiddenPrompt: "ROLE: High-Fashion Stylist & Digital Artist. GOAL: Visualizing fashion outfit. RULES: 1. Focus strictly on the clothing material (silk, denim, leather...). 2. Realistic fabric draping and physics. 3. Lighting matches the original scene. 4. Keep the pose natural. 5. High-fashion magazine quality.",
     defaultRatio: '3:4',
     requiresImage: true,
     description: 'Thay đổi quần áo model giữ nguyên dáng pose.'
@@ -40,7 +40,7 @@ export const AI_TASKS = [
     id: 'youtube-thumb',
     label: 'Thumbnail YouTube',
     icon: Youtube,
-    hiddenPrompt: "ROLE: YouTube Viral Strategist. TASK: Create a click-bait style background. High saturation, dramatic lighting, exciting atmosphere.",
+    hiddenPrompt: "ROLE: Viral YouTube Strategist. GOAL: Create a Clickbait Background. RULES: 1. High contrast and high saturation. 2. Dramatic facial expressions (if people present) or dramatic lighting. 3. Background: Exciting, mysterious, or action-packed. 4. Composition: Rule of thirds. 5. Style: 3D Render or Digital Art, Vibrant colors.",
     defaultRatio: '16:9',
     description: 'Tạo nền thumbnail kịch tính, thu hút lượt click.'
   }

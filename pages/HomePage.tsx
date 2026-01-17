@@ -3,8 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, ShoppingBag, BookOpen, Send, Sparkles, ChevronLeft, ChevronRight, 
-  Flame, Loader2, CheckCircle, PenTool, Layout, FileText, MousePointer2, 
-  User, Phone, Mail, HelpCircle, MessageSquare, Download 
+  Flame, Loader2, CheckCircle, PenTool, Layout, FileText, MousePointer2, MessageSquare
 } from 'lucide-react';
 import { COURSES } from '../constants';
 import { PRODUCTS } from '../products';
@@ -72,11 +71,34 @@ const HomePage: React.FC = () => {
   const [isConsultSending, setIsConsultSending] = useState(false);
   const [isConsultSuccess, setIsConsultSuccess] = useState(false);
 
-  // Banner Slides (Nên dùng ảnh khổ ngang 2000x574px)
+  // === CẤU HÌNH SLIDER (4 ẢNH - CÓ LINK) ===
+  // HƯỚNG DẪN THAY ẢNH:
+  // Bạn hãy thay đường link trong dấu ngoặc kép "" ở phần image: "..."
   const slides = [
-    "https://images.unsplash.com/photo-1626785774573-4b799314348d?auto=format&fit=crop&q=80&w=2000&h=574", // Abstract Gradient
-    "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=2000&h=574", // Creative Workspace
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2000&h=574", // Minimal Desk
+    {
+      // 1. Ảnh cho trang KHÓA HỌC
+      image: "https://res.cloudinary.com/dcwgy4tnb/image/upload/q_auto/v1768621654/17bec253-566f-40fa-b8dd-8f3817b0f319.png", 
+      link: "/courses",
+      alt: "Khám phá khóa học thiết kế"
+    },
+    {
+      // 2. Ảnh cho trang BOOK THIẾT KẾ
+      image: "https://res.cloudinary.com/dcwgy4tnb/image/upload/q_auto/v1768634674/ee26451b-caff-4bbf-81f8-f57f00a545e1.png",
+      link: "/design-brief",
+      alt: "Dịch vụ thiết kế chuyên nghiệp"
+    },
+    {
+      // 3. Ảnh cho trang AI STUDIO
+      image: "https://res.cloudinary.com/dcwgy4tnb/image/upload/q_auto/v1768578240/22dd6054-ef6d-4208-822b-f0b27c8d8700.png",
+      link: "/ai-studio",
+      alt: "Sáng tạo với AI Studio"
+    },
+    {
+      // 4. Ảnh cho trang TÀI NGUYÊN (SHOP)
+      image: "https://res.cloudinary.com/dcwgy4tnb/image/upload/q_auto/v1768653245/eaaf8e84-c9e8-4a4b-b3f7-7e3084c6cffd.png",
+      link: "/shop",
+      alt: "Mua tài nguyên thiết kế"
+    }
   ];
 
   useEffect(() => {
@@ -85,6 +107,14 @@ const HomePage: React.FC = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,36 +162,56 @@ const HomePage: React.FC = () => {
     <div className="bg-slate-50 min-h-screen">
       
       {/* 1. TOP NAVIGATION BLOCKS & BANNER */}
-      <div className="pt-20 md:pt-24 pb-12 bg-white">
+      <div className="pt-20 md:pt-28 pb-12 bg-white">
         
-        {/* Wide Banner Slider (FULL WIDTH - KHÔNG BO GÓC) */}
-        {/* Đã di chuyển ra khỏi container max-w-7xl để tràn màn hình */}
-        <FadeInSection>
-          <div className="relative w-full aspect-[2000/574] md:aspect-[3.5/1] overflow-hidden bg-slate-100 mb-8">
-            {slides.map((img, idx) => (
-              <div 
-                key={idx}
-                className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}
-              >
-                <img src={img} alt="Banner" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent pointer-events-none"></div>
-              </div>
-            ))}
-            
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
-              {slides.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentSlide(idx)}
-                  className={`w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-white w-6' : 'bg-white/50 hover:bg-white'}`}
-                />
-              ))}
-            </div>
-          </div>
-        </FadeInSection>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
+          {/* Banner Slider (VỪA KHUNG & BO GÓC) */}
+          <FadeInSection>
+            {/* 
+                TỶ LỆ BANNER:
+                - aspect-[3/1]: Mobile
+                - md:aspect-[4/1]: Desktop
+            */}
+            <div className="relative w-full aspect-[3/1] md:aspect-[4/1] overflow-hidden bg-slate-100 rounded-xl md:rounded-3xl shadow-lg group">
+              {slides.map((slide, idx) => (
+                <div 
+                  key={idx}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                >
+                  <Link to={slide.link} className="block w-full h-full relative cursor-pointer">
+                    <img src={slide.image} alt={slide.alt} className="w-full h-full object-cover" />
+                  </Link>
+                </div>
+              ))}
+
+              {/* Mũi tên điều hướng (Thêm mới) */}
+              <button 
+                onClick={(e) => { e.preventDefault(); prevSlide(); }}
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/20 text-white backdrop-blur-md border border-white/10 hover:bg-white hover:text-slate-900 transition-all opacity-0 group-hover:opacity-100 duration-300"
+              >
+                 <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={(e) => { e.preventDefault(); nextSlide(); }}
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/20 text-white backdrop-blur-md border border-white/10 hover:bg-white hover:text-slate-900 transition-all opacity-0 group-hover:opacity-100 duration-300"
+              >
+                 <ChevronRight size={20} />
+              </button>
+              
+              {/* Slider Dots */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
+                {slides.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentSlide(idx)}
+                    className={`w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-white w-6' : 'bg-white/50 hover:bg-white'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </FadeInSection>
+
           {/* 4 Nút Tối Giản (CHỈNH SỬA: NỀN ICON ĐẬM, ICON TRẮNG, GỌN HƠN) */}
           <FadeInSection delay={100}>
             <div className="grid grid-cols-4 gap-2 md:gap-6">
