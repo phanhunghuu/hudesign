@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Sparkles, Upload, Image as ImageIcon, Download, Settings2, 
-  Wand2, Crown, Zap, AlertTriangle, Maximize2, Palette, ArrowLeft, LogIn
+  Wand2, Crown, Zap, AlertTriangle, Maximize2, Palette, ArrowLeft, LogIn, XCircle, RefreshCw,
+  Type, Target, Plus, Trash2, Layers
 } from 'lucide-react';
 import { AI_TASKS, ASPECT_RATIOS, RESOLUTIONS, MODELS } from '../features/AiStudio/constants';
 import { generateCreativeContent } from '../features/AiStudio/geminiService';
@@ -15,9 +16,20 @@ const AiStudioPage: React.FC = () => {
   // --- STATE ---
   const [selectedTask, setSelectedTask] = useState(AI_TASKS[0]);
   const [prompt, setPrompt] = useState('');
+  
+  // Input State
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImage2, setUploadedImage2] = useState<string | null>(null); // New: Product 2
+  const [uploadedImage3, setUploadedImage3] = useState<string | null>(null); // New: Product 3
+  
+  const [logoImage, setLogoImage] = useState<string | null>(null);
+  const [headline, setHeadline] = useState(''); 
+  const [subHeadline, setSubHeadline] = useState(''); // New: Sub Headline
   const [styleImage, setStyleImage] = useState<string | null>(null);
+  
+  // Output State
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   // Settings State
   const [modelId, setModelId] = useState('flash');
@@ -30,10 +42,13 @@ const AiStudioPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
-  const [credits, setCredits] = useState<number | null>(null); // Null = loading or not logged in
+  const [credits, setCredits] = useState<number | null>(null);
 
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef2 = useRef<HTMLInputElement>(null);
+  const fileInputRef3 = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
   const styleInputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +59,6 @@ const AiStudioPage: React.FC = () => {
       if (session?.user) {
         setUser(session.user);
         
-        // Lấy thông tin credits từ bảng profiles
         const { data, error } = await supabase
           .from('profiles')
           .select('credits, is_vip')
@@ -55,8 +69,6 @@ const AiStudioPage: React.FC = () => {
           setCredits(data.credits);
           setIsVip(data.is_vip);
         } else {
-          // Nếu user chưa có profile (lỗi lúc đăng ký), tạo tạm profile mặc định
-          // (Thực tế nên xử lý ở backend trigger, đây là fallback)
           setCredits(0);
         }
       } else {
@@ -83,19 +95,38 @@ const AiStudioPage: React.FC = () => {
   const handleTaskChange = (task: typeof AI_TASKS[0]) => {
     setSelectedTask(task);
     setAspectRatio(task.defaultRatio);
+    setErrorMessage(null);
+    // Reset inputs specific to sales design
+    if (task.id !== 'sales-design') {
+        setLogoImage(null);
+        setHeadline('');
+        setSubHeadline('');
+        setUploadedImage2(null);
+        setUploadedImage3(null);
+    }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'base' | 'style') => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'base' | 'base2' | 'base3' | 'style' | 'logo') => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (type === 'base') setUploadedImage(reader.result as string);
+        else if (type === 'base2') setUploadedImage2(reader.result as string);
+        else if (type === 'base3') setUploadedImage3(reader.result as string);
+        else if (type === 'logo') setLogoImage(reader.result as string);
         else setStyleImage(reader.result as string);
+        setErrorMessage(null);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  const removeImage = (type: 'base' | 'base2' | 'base3') => {
+    if (type === 'base') setUploadedImage(null);
+    if (type === 'base2') setUploadedImage2(null);
+    if (type === 'base3') setUploadedImage3(null);
+  }
 
   const checkVipFeature = (featureIsVip: boolean) => {
     if (featureIsVip && !isVip) {
@@ -106,38 +137,34 @@ const AiStudioPage: React.FC = () => {
   };
 
   const handleGenerate = async () => {
-    // 0. Check Login
+    setErrorMessage(null);
     if (!user) {
       setShowAuth(true);
       return;
     }
 
-    // 1. Check Credits
     if (!isVip && (credits === null || credits <= 0)) {
-      alert("Bạn đã hết lượt tạo miễn phí. Vui lòng nâng cấp hoặc mua thêm lượt!");
+      setErrorMessage("Bạn đã hết lượt tạo miễn phí. Vui lòng nâng cấp hoặc mua thêm lượt!");
       setShowUpgrade(true);
       return;
     }
 
-    // 2. Validate Input
     if (!prompt.trim()) {
-      alert("Vui lòng nhập mô tả ý tưởng của bạn!");
+      setErrorMessage("Vui lòng nhập mô tả ý tưởng của bạn!");
       return;
     }
     if (selectedTask.requiresImage && !uploadedImage) {
-      alert("Tác vụ này yêu cầu ảnh gốc. Vui lòng tải ảnh lên!");
+      setErrorMessage("Tác vụ này yêu cầu ít nhất 1 ảnh gốc. Vui lòng tải ảnh lên!");
       return;
     }
 
-    // 3. Use System API Key
     const apiKey = process.env.API_KEY || "";
     if (!apiKey) {
-      alert("Hệ thống chưa cấu hình API Key. Vui lòng liên hệ Admin.");
+      setErrorMessage("Hệ thống chưa cấu hình API Key. Vui lòng liên hệ Admin.");
       return;
     }
 
     setLoading(true);
-    setGeneratedImage(null);
     
     if (window.innerWidth < 768) {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -148,6 +175,11 @@ const AiStudioPage: React.FC = () => {
         prompt,
         hiddenPrompt: selectedTask.hiddenPrompt,
         imageBase64: uploadedImage || undefined,
+        imageBase64_2: uploadedImage2 || undefined,
+        imageBase64_3: uploadedImage3 || undefined,
+        logoBase64: logoImage || undefined,
+        headline: headline || undefined,
+        subHeadline: subHeadline || undefined,
         styleImageBase64: styleImage || undefined,
         modelType: modelId as 'flash' | 'pro',
         aspectRatio,
@@ -157,22 +189,18 @@ const AiStudioPage: React.FC = () => {
 
       setGeneratedImage(result);
       
-      // 4. Trừ Credit nếu thành công & không phải VIP
       if (!isVip && credits !== null) {
         const newCredits = credits - 1;
-        setCredits(newCredits); // Update UI ngay lập tức
+        setCredits(newCredits);
         
-        // Update Database
         const { error } = await supabase
           .from('profiles')
           .update({ credits: newCredits })
           .eq('id', user.id);
-          
-        if (error) console.error("Lỗi cập nhật credit:", error);
       }
 
     } catch (error: any) {
-      alert(`Lỗi: ${error.message}`);
+      setErrorMessage(error.message);
     } finally {
       setLoading(false);
     }
@@ -193,10 +221,7 @@ const AiStudioPage: React.FC = () => {
     <div className="min-h-screen bg-zinc-950 text-zinc-200 font-sans selection:bg-violet-500/30 selection:text-violet-200 flex flex-col md:flex-row relative md:fixed md:inset-0 md:overflow-hidden">
       
       {/* === A. SIDEBAR === */}
-      {/* Mobile: Top layout / Desktop: Left fixed width */}
       <aside className="w-full md:w-64 lg:w-72 bg-zinc-900/50 backdrop-blur-xl border-b md:border-b-0 md:border-r border-white/5 flex flex-col z-20 shrink-0">
-        
-        {/* Header & Back Button */}
         <div className="p-4 md:p-6 border-b border-white/5 space-y-4">
           <Link to="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest group">
              <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
@@ -210,7 +235,6 @@ const AiStudioPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Task List - Horizontal on Mobile, Vertical on Desktop */}
         <div className="flex-1 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto p-4 flex md:block gap-3 no-scrollbar">
           <p className="hidden md:block px-3 text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 mt-2">Chọn tác vụ</p>
           {AI_TASKS.map(task => (
@@ -235,7 +259,6 @@ const AiStudioPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Footer info (Desktop only) */}
         <div className="hidden md:block p-4 border-t border-white/5 bg-zinc-900/80">
            <p className="text-[10px] text-zinc-600 text-center font-medium">Powered by Google Gemini 2.5 & 3.0</p>
         </div>
@@ -300,69 +323,184 @@ const AiStudioPage: React.FC = () => {
                  </div>
               </div>
 
-              {/* Image Uploads */}
+              {/* === KHU VỰC UPLOAD ẢNH === */}
               <div className="space-y-3">
                  <label className="text-[11px] font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                    <ImageIcon size={12} /> Hình ảnh đầu vào
+                    <ImageIcon size={12} /> Tài nguyên đầu vào
                  </label>
                  
-                 <div className="grid grid-cols-2 gap-3">
-                    {/* Base Image */}
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`aspect-square rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group ${
-                         selectedTask.requiresImage && !uploadedImage ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-violet-500/50 hover:bg-white/5'
-                      }`}
-                    >
-                       {uploadedImage ? (
-                          <>
-                             <img src={uploadedImage} className="w-full h-full object-cover" alt="Uploaded" />
-                             <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="text-[10px] text-white font-bold uppercase">Thay ảnh</span>
-                             </div>
-                          </>
-                       ) : (
-                          <>
-                             <Upload size={20} className="text-zinc-500 mb-2 group-hover:text-violet-400 transition-colors" />
-                             <span className="text-[10px] font-bold text-zinc-500 text-center px-2">
-                                {selectedTask.requiresImage ? "Ảnh gốc (Bắt buộc)" : "Ảnh gốc (Tùy chọn)"}
-                             </span>
-                          </>
-                       )}
-                       <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'base')} />
+                 <div className="space-y-4">
+                    {/* Phần ảnh sản phẩm (Hỗ trợ 3 ảnh) */}
+                    <div>
+                        <p className="text-[10px] font-bold text-zinc-500 mb-2 flex items-center justify-between">
+                            <span>Ảnh sản phẩm (Tối đa 3)</span>
+                            <span className="opacity-50 text-[9px]">Gốc / Tách nền</span>
+                        </p>
+                        <div className="grid grid-cols-3 gap-2">
+                            {/* Slot 1: Main Product */}
+                            <div 
+                              onClick={() => fileInputRef.current?.click()}
+                              className={`aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group ${
+                                 selectedTask.requiresImage && !uploadedImage ? 'border-red-500/50 bg-red-500/5' : 'border-white/10 hover:border-violet-500/50 hover:bg-white/5'
+                              }`}
+                            >
+                               {uploadedImage ? (
+                                  <>
+                                     <img src={uploadedImage} className="w-full h-full object-cover" alt="Product 1" />
+                                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <RefreshCw size={16} className="text-white" />
+                                     </div>
+                                  </>
+                               ) : (
+                                  <>
+                                     <Upload size={18} className="text-zinc-500 mb-1 group-hover:text-violet-400" />
+                                     <span className="text-[9px] font-bold text-zinc-500">Ảnh 1</span>
+                                  </>
+                               )}
+                               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'base')} />
+                            </div>
+
+                            {/* Slot 2: Product 2 */}
+                            {uploadedImage && (
+                                <div 
+                                  onClick={() => !uploadedImage2 && fileInputRef2.current?.click()}
+                                  className="aspect-square rounded-xl border-2 border-dashed border-white/10 hover:border-violet-500/50 hover:bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group"
+                                >
+                                   {uploadedImage2 ? (
+                                      <>
+                                         <img src={uploadedImage2} className="w-full h-full object-cover" alt="Product 2" />
+                                         <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1 hover:bg-red-500 transition-colors z-10" onClick={(e) => { e.stopPropagation(); removeImage('base2'); }}>
+                                            <Trash2 size={10} className="text-white" />
+                                         </div>
+                                      </>
+                                   ) : (
+                                      <>
+                                         <Plus size={18} className="text-zinc-500 mb-1" />
+                                         <span className="text-[9px] font-bold text-zinc-500">Thêm ảnh</span>
+                                      </>
+                                   )}
+                                   <input type="file" ref={fileInputRef2} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'base2')} />
+                                </div>
+                            )}
+
+                            {/* Slot 3: Product 3 */}
+                            {uploadedImage2 && (
+                                <div 
+                                  onClick={() => !uploadedImage3 && fileInputRef3.current?.click()}
+                                  className="aspect-square rounded-xl border-2 border-dashed border-white/10 hover:border-violet-500/50 hover:bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group"
+                                >
+                                   {uploadedImage3 ? (
+                                      <>
+                                         <img src={uploadedImage3} className="w-full h-full object-cover" alt="Product 3" />
+                                         <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1 hover:bg-red-500 transition-colors z-10" onClick={(e) => { e.stopPropagation(); removeImage('base3'); }}>
+                                            <Trash2 size={10} className="text-white" />
+                                         </div>
+                                      </>
+                                   ) : (
+                                      <>
+                                         <Plus size={18} className="text-zinc-500 mb-1" />
+                                         <span className="text-[9px] font-bold text-zinc-500">Thêm ảnh</span>
+                                      </>
+                                   )}
+                                   <input type="file" ref={fileInputRef3} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'base3')} />
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    {/* Style Image */}
-                    <div 
-                      onClick={() => styleInputRef.current?.click()}
-                      className="aspect-square rounded-2xl border-2 border-dashed border-white/10 hover:border-pink-500/50 hover:bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group"
-                    >
-                       {styleImage ? (
-                          <>
-                             <img src={styleImage} className="w-full h-full object-cover" alt="Style" />
-                             <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="text-[10px] text-white font-bold uppercase">Thay ảnh</span>
+                    {/* Hàng ngang: Ảnh Style và Logo */}
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                       {/* Phần ảnh Style */}
+                       <div>
+                          <p className="text-[10px] font-bold text-zinc-500 mb-2">Ảnh tham khảo Style</p>
+                          <div 
+                            onClick={() => styleInputRef.current?.click()}
+                            className="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-white/10 hover:border-pink-500/50 hover:bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group bg-black/40"
+                          >
+                             {styleImage ? (
+                                <>
+                                   {/* SỬ DỤNG OBJECT-CONTAIN ĐỂ HIỆN FULL HÌNH */}
+                                   <img src={styleImage} className="w-full h-full object-contain opacity-80 group-hover:opacity-60 transition-opacity" alt="Style" />
+                                   <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                       <div className="bg-black/60 px-3 py-1.5 rounded-full flex items-center gap-2 backdrop-blur-md">
+                                          <Palette size={14} className="text-white" />
+                                          <span className="text-[10px] text-white font-bold uppercase">Thay ảnh</span>
+                                       </div>
+                                   </div>
+                                </>
+                             ) : (
+                                <div className="flex flex-col items-center gap-2 text-center p-2">
+                                   <Palette size={20} className="text-zinc-500 group-hover:text-pink-400 transition-colors" />
+                                   <span className="text-[9px] font-bold text-zinc-500">Tải ảnh Style (AI học màu & ánh sáng)</span>
+                                </div>
+                             )}
+                             <input type="file" ref={styleInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'style')} />
+                          </div>
+                       </div>
+
+                       {/* LOGO UPLOAD (Chỉ hiện khi task là Sales Design) */}
+                       {selectedTask.id === 'sales-design' && (
+                          <div>
+                             <p className="text-[10px] font-bold text-zinc-500 mb-2">Logo (Tùy chọn)</p>
+                             <div 
+                               onClick={() => logoInputRef.current?.click()}
+                               className="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-white/10 hover:border-emerald-500/50 hover:bg-white/5 flex flex-col items-center justify-center cursor-pointer transition-all relative overflow-hidden group bg-black/20"
+                             >
+                                {logoImage ? (
+                                   <>
+                                      <img src={logoImage} className="w-full h-full object-contain p-4" alt="Logo" />
+                                      <div className="absolute top-1 right-1 bg-black/50 rounded-full p-1 hover:bg-red-500 transition-colors z-10" onClick={(e) => { e.stopPropagation(); setLogoImage(null); }}>
+                                         <XCircle size={14} className="text-white" />
+                                      </div>
+                                   </>
+                                ) : (
+                                   <div className="flex flex-col items-center gap-2 text-center p-2">
+                                      <Target size={20} className="text-zinc-500 group-hover:text-emerald-400" />
+                                      <span className="text-[9px] font-bold text-zinc-500 group-hover:text-zinc-300">Tải Logo lên</span>
+                                   </div>
+                                )}
+                                <input type="file" ref={logoInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'logo')} />
                              </div>
-                          </>
-                       ) : (
-                          <>
-                             <Palette size={20} className="text-zinc-500 mb-2 group-hover:text-pink-400 transition-colors" />
-                             <span className="text-[10px] font-bold text-zinc-500 text-center px-2">Ảnh tham khảo Style</span>
-                          </>
+                          </div>
                        )}
-                       <input type="file" ref={styleInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'style')} />
                     </div>
                  </div>
               </div>
+
+              {/* Headline & Subheadline Input */}
+              {selectedTask.id === 'sales-design' && (
+                <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+                   <div className="flex items-center gap-2">
+                       <Type size={12} className="text-zinc-500" />
+                       <label className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Nội dung chữ (Text)</label>
+                   </div>
+                   
+                   <input 
+                      type="text" 
+                      value={headline}
+                      onChange={(e) => setHeadline(e.target.value)}
+                      placeholder="Tiêu đề chính (Headline)..." 
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all font-bold placeholder:font-normal placeholder:text-zinc-600"
+                   />
+                   
+                   <input 
+                      type="text" 
+                      value={subHeadline}
+                      onChange={(e) => setSubHeadline(e.target.value)}
+                      placeholder="Tiêu đề phụ (Sub-headline)..." 
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-zinc-300 focus:ring-1 focus:ring-emerald-500/50 outline-none transition-all font-medium placeholder:font-normal placeholder:text-zinc-600"
+                   />
+                </div>
+              )}
 
               {/* Prompt Input */}
               <div className="space-y-3">
                  <label className="text-[11px] font-black uppercase tracking-widest text-zinc-500">Mô tả ý tưởng (Tiếng Việt)</label>
                  <textarea 
                     value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="VD: Một đôi giày sneaker màu trắng đặt trên nền bê tông xám, ánh sáng neon tím chiếu từ bên phải..."
-                    className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 text-sm text-zinc-200 focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 outline-none transition-all resize-none min-h-[120px]"
+                    onChange={(e) => { setPrompt(e.target.value); setErrorMessage(null); }}
+                    placeholder="VD: Ba ly trà trái cây đặt trên bàn gỗ, nắng chiếu xuyên qua lá cây tạo bóng đổ lung linh..."
+                    className="w-full bg-black/20 border border-white/10 rounded-2xl p-4 text-sm text-zinc-200 focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500 outline-none transition-all resize-none min-h-[100px]"
                  ></textarea>
               </div>
 
@@ -397,6 +535,22 @@ const AiStudioPage: React.FC = () => {
                  </div>
               </div>
 
+              {/* Error Message Display */}
+              {errorMessage && (
+                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex flex-col gap-2 animate-in fade-in slide-in-from-top-2">
+                   <div className="flex items-start gap-3 text-red-200">
+                      <XCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
+                      <div className="text-xs font-medium leading-relaxed">{errorMessage}</div>
+                   </div>
+                   <button 
+                     onClick={handleGenerate} 
+                     className="self-end bg-red-500/20 hover:bg-red-500/30 text-red-200 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase flex items-center gap-2 transition-colors"
+                   >
+                     <RefreshCw size={12} /> Thử lại
+                   </button>
+                </div>
+              )}
+
               {/* GENERATE BUTTON */}
               {!user ? (
                 <button 
@@ -421,8 +575,16 @@ const AiStudioPage: React.FC = () => {
 
         {/* === B.2 DISPLAY PANEL (RIGHT/BOTTOM) === */}
         <div ref={resultRef} className="flex-1 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:20px_20px] bg-zinc-950 flex items-center justify-center p-8 md:p-12 relative min-h-[50vh] md:min-h-0">
-           {/* Background decorative */}
            <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-zinc-950 via-transparent to-zinc-950 opacity-80"></div>
+
+           {/* LOADING OVERLAY */}
+           {loading && (
+             <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-sm">
+                <div className="w-16 h-16 border-4 border-violet-500/30 border-t-violet-500 rounded-full animate-spin mb-4"></div>
+                <p className="text-violet-200 font-bold animate-pulse">Đang kết nối siêu máy tính...</p>
+                <p className="text-xs text-zinc-500 mt-2">Quá trình này mất khoảng 5-10 giây</p>
+             </div>
+           )}
 
            {generatedImage ? (
               <div className="relative group animate-in zoom-in duration-500 shadow-2xl shadow-violet-500/10 rounded-xl overflow-hidden max-h-full max-w-full">
@@ -451,7 +613,6 @@ const AiStudioPage: React.FC = () => {
         </div>
       </main>
 
-      {/* FLOATING UPGRADE BUTTON (FIXED BOTTOM RIGHT - SMALL) */}
       {!isVip && (
         <button 
           onClick={() => setShowUpgrade(true)}
@@ -460,7 +621,6 @@ const AiStudioPage: React.FC = () => {
             <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-amber-400 to-orange-600 rounded-full flex items-center justify-center text-zinc-900 shadow-lg shadow-amber-500/30 hover:scale-110 hover:shadow-amber-500/50 transition-all border-2 border-white/20 animate-[bounce_2s_infinite]">
               <Crown size={18} fill="currentColor" />
             </div>
-            {/* Tooltip on hover */}
             <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-white text-zinc-900 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block shadow-xl">
               Nâng cấp Pro
             </div>
